@@ -9,7 +9,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <link href="img/logotipo_min.ico" type="image/x-icon" rel="shortcut icon"/>
+        <title>Conference Online</title>
     </head>
     <body>
         <h1>Hello World!</h1>
