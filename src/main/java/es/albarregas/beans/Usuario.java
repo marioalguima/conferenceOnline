@@ -34,7 +34,7 @@ public class Usuario implements Serializable {
     @Column(name = "tipo")
     private char tipo;
     
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE)
     @PrimaryKeyJoinColumn
     private Canal canal;
     
@@ -42,13 +42,12 @@ public class Usuario implements Serializable {
         
     }
     
-    public Usuario(int idUsuario, String nombre, String email, String password, char tipo, Canal canal){
+    public Usuario(int idUsuario, String nombre, String email, String password, char tipo){
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
         this.password = password;
         this.tipo = tipo;
-        this.canal = canal;
     }
 
     /**

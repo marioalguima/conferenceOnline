@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/conferenceOnline">
-    <Resource auth="Container" 
-            driverClassName="com.mysql.jdbc.Driver"
-            maxActive="100"
-            maxIdle="30"
-            maxWait="10000"
-            name="jdbc/Pool"
-            type="javax.sql.DataSource"
-            url="jdbc:mysql://localhost:3306/conferenceonline"
-            username="java2017"
-            password="2017"    />
+  <Resource auth="Container" 
+            driverClassName="com.mysql.jdbc.Driver" 
+            maxActive="100" 
+            maxIdle="30" 
+            maxWait="10000" 
+            name="jdbc/Pool" 
+            password="2017" 
+            type="javax.sql.DataSource" 
+            url="jdbc:mysql://localhost:3307/conferenceonline" 
+            username="java2017"/>
 </Context>

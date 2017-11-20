@@ -48,7 +48,9 @@ public class GenericoDAO<T> implements IGenericoDAO<T> {
             manejarExcepcion(he);
             Logger.getLogger(GenericoDAO.class.getName()).log(Level.SEVERE, null, he);
         } finally {
-            cerrarSesion();
+            if(sesion!=null){
+                cerrarSesion();
+            }
         }
     }
 
