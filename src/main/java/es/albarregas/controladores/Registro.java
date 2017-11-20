@@ -22,8 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "Registro", urlPatterns = {"/Registro"})
 public class Registro extends HttpServlet {
 
-
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -36,7 +34,7 @@ public class Registro extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
 
     /**
@@ -50,16 +48,19 @@ public class Registro extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        GenericoDAO generico = new GenericoDAO();
-        
-        Usuario usuario = new Usuario(0, "Angel", "email3", "password", 'n');
-        Canal canal = new Canal(0, "descripcion canal", 0, 0,usuario);
-        generico.add(usuario);
-        generico.add(canal);
-        
-        
-        
+
+        switch (request.getParameter("peticion")) {
+            case "comprobarNombreRegistro":
+                if(comprobarNombre(request.getParameter("nombre"))){
+                    
+                };
+                break;
+        }
+
+//        Usuario usuario = new Usuario(0, "Angel", "email3", "password", 'n');
+//        Canal canal = new Canal(0, "descripcion canal", 0, 0,usuario);
+//        generico.add(usuario);
+//        generico.add(canal);
     }
 
     /**
@@ -71,5 +72,15 @@ public class Registro extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private boolean comprobarNombre(String nombre) {
+
+        GenericoDAO generico = new GenericoDAO();
+        if (generico.get("Usuario where nombre='" + nombre + "'").isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }

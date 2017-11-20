@@ -4,12 +4,17 @@
  * and open the template in the editor.
  */
 window.onload = function() {
-    if(document.getElementById("btnEntrar")!==null){
-        document.getElementById("btnEntrar").addEventListener("click",eventoClickEntrar,false);
+    if(document.getElementById("btnEntrar") !== null){
+        document.getElementById("btnEntrar").onclick = eventoClickEntrar;
     }
-    if(document.getElementById("btnRegistro")!==null){
-        document.getElementById("btnRegistro").addEventListener("click",eventoClickRegistro,false);
+    if(document.getElementById("btnRegistro") !== null){
+        document.getElementById("btnRegistro").onclick = eventoClickRegistro;
     }
+    if(document.getElementById("usuarioRegistro") !== null){
+        document.getElementById("usuarioRegistro").onblur = eventoPerdidaFocoUsuarioRegistro;
+    }
+    
+    
 };
 
 function eventoClickRegistro () {
@@ -24,4 +29,18 @@ function eventoClickEntrar () {
     document.getElementById("registro").className = "tab-pane fade";
     document.getElementById("CabInicioSesion").className = "active";
     document.getElementById("CabRegistro").className = "";
+}
+
+function eventoPerdidaFocoUsuarioRegistro(){
+    var nombreUsuario = document.getElementById("usuarioRegistro").value;
+    if(nombreUsuario.length >= 3){
+        $.ajax({
+            url : "Registro",
+            type : "POST",
+            data : {"peticion" : "comprobarNombreRegistro" ,"nombre" : nombreUsuario },
+            success : function (datos){
+                
+            }
+        });
+    }
 }
