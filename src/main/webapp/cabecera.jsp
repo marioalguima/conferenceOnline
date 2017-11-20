@@ -33,11 +33,11 @@
                         <div class="modal-body tab-content">
                             <div id="inicioSesion" class="tab-pane fade in active">
                                 <h3>Inicio Sesi&oacute;n</h3>
-                                
+
                             </div>
                             <div id="registro" class="tab-pane fade">
                                 <h3>Registro</h3>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -55,17 +55,19 @@
             <div class="col-xs-12 col-md-9" style="margin-top: 2%;">
                 <div class="col-xs-12 col-md-7">
                     <form action="${sessionScope.path}/" method="post">
-                        <div class="form-group col-md-11" style="margin-right: 0; padding-right: 0;">
+                        <div class="form-group col-xs-11 col-sm-11 col-md-11 col-lg-11" style="margin-right: 0; padding-right: 0;">
                             <input type="text" class="form-control" name="nombre" placeholder="Buscar" style="border-radius: 0;"/>
                         </div>
-                        <input type="submit" class="btn btn-default col-md-1" name="buscar" value="" style="border-radius: 0; margin-left: 0; padding-left: 0; background-image: url(${sessionScope.path}/img/lupa.png); background-size: cover; border-left: none; opacity: 0.8"/>
+                        <input type="submit" class="btn btn-default col-xs-1 col-sm-1 col-md-1 col-lg-1" name="buscar" value="" style="border-radius: 0; margin-left: 0; padding-left: 0; background-image: url(${sessionScope.path}/img/lupa.png); background-size: cover; border-left: none; opacity: 0.8"/>
                     </form>
                 </div>
                 <div class="col-xs-6 col-md-5" style="padding-left: 15%;">
                     <c:choose>
                         <c:when test="${sessionScope.USUARIO==null}">
-                            <button id="btnEntrar" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Iniciar sesi&oacute;n</button>
-                            <button id="btnRegistro" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Registrarse</button>
+                            <div class="col-xs-12 col-md-12">
+                                <button id="btnEntrar" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Iniciar sesi&oacute;n</button>
+                                <button id="btnRegistro" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Registrarse</button>
+                            </div>
                         </c:when>
                         <c:when test="${sessionScope.USUARIO!=null}">
                             <button class="btn btn-default" style="border-radius: 0;">Mi canal</button>
