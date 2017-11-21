@@ -13,6 +13,9 @@ window.onload = function () {
     if (document.getElementById("btnIniciarSesion") !== null) {
         document.getElementById("btnIniciarSesion").onclick = eventoClickLogin;
     }
+    if(document.getElementById("menuCerrarSesion") !== null) {
+        document.getElementById("menuCerrarSesion").onclick = eventoCerrarSesion;
+    }
     if (document.getElementById("usuarioRegistro") !== null) {
         document.getElementById("usuarioRegistro").onblur = eventoPerdidaFocoUsuarioRegistro;
     }
@@ -49,7 +52,7 @@ function eventoClickLogin() {
     var passwordLogin = document.getElementById("passwordLogin").value;
     if(nombreUsuario.length >= 3 && passwordLogin.length >= 3 && /[a-zA-Z0-9]*/.test(nombreUsuario) && /[a-zA-Z0-9]*/.test(passwordLogin)){
         $.ajax({
-            url: "RegistroLogin",
+            url: "ControlUsuario",
             type: "POST",
             data: {"peticion": "Entrar", "usuarioLogin": nombreUsuario, "passwordLogin": passwordLogin},
             success: function (respuesta) {
@@ -64,11 +67,22 @@ function eventoClickLogin() {
     }
 }
 
+function eventoCerrarSesion() {
+    $.ajax({
+            url: "ControlUsuario",
+            type: "POST",
+            data: {"peticion": "cerrarSesion"},
+            success: function () {
+                location.reload(true);
+            }
+        });
+}
+
 function eventoPerdidaFocoUsuarioRegistro() {
     var nombreUsuario = document.getElementById("usuarioRegistro").value;
     if (nombreUsuario.length >= 3) {
         $.ajax({
-            url: "RegistroLogin",
+            url: "ControlUsuario",
             type: "POST",
             data: {"peticion": "comprobarNombreRegistro", "nombre": nombreUsuario},
             success: function (respuesta) {
@@ -94,7 +108,7 @@ function eventoPerdidaFocoEmailRegistro() {
     var email = document.getElementById("emailRegistro").value;
     if (email.length >= 8 && /[a-zA-Z0-9_.]+@[a-zA-Z0-9]+[.][a-zA-Z]{1,5}/.test(email)) {
         $.ajax({
-            url: "RegistroLogin",
+            url: "ControlUsuario",
             type: "POST",
             data: {"peticion": "comprobarEmailRegistro", "email": email},
             success: function (respuesta) {

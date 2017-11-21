@@ -16,13 +16,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Mario
  */
-@WebServlet(name = "RegistroLogin", urlPatterns = {"/RegistroLogin"})
-public class RegistroLogin extends HttpServlet {
+@WebServlet(name = "ControlUsuario", urlPatterns = {"/ControlUsuario"})
+public class ControlUsuario extends HttpServlet {
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -52,6 +53,8 @@ public class RegistroLogin extends HttpServlet {
             throws ServletException, IOException {
 
         String respuesta = "";
+        HttpSession sesion = null; // Variable para almacenar la sesión
+        Usuario usuario; // Variable para almacenar el usuario que se loguea o registra
 
         switch (request.getParameter("peticion")) {
             case "comprobarNombreRegistro":
@@ -69,17 +72,25 @@ public class RegistroLogin extends HttpServlet {
                 }
                 break;
             case "Registrarse":
-                darAltaUsuario(request.getParameter("usuarioRegistro"), request.getParameter("emailRegistro"), request.getParameter("passwordRegistro"));
-                //TODO Hacer la sesion y almacenar el usuario en sesion
+                usuario = darAltaUsuario(request.getParameter("usuarioRegistro"), request.getParameter("emailRegistro"), request.getParameter("passwordRegistro"));
+                sesion = request.getSession(true);                
+                sesion.setAttribute("USUARIO", usuario);
                 response.sendRedirect("index.jsp");
                 break;
             case "Entrar":
-                Usuario usuario = iniciarSesion(request.getParameter("usuarioLogin"), request.getParameter("passwordLogin"));
+                usuario = iniciarSesion(request.getParameter("usuarioLogin"), request.getParameter("passwordLogin"));
                 if(usuario != null){
-                    //TODO Hacer la sesion y almacenar el usuario en sesion
+                    sesion = request.getSession(true);
+                    sesion.setAttribute("USUARIO", usuario);
                 }else{
                     respuesta = "notok";
                 }                
+                break;
+            case "cerrarSesion":
+                sesion = request.getSession(false);
+                if(sesion != null){
+                    sesion.invalidate();
+                }
                 break;
         }
         if (!respuesta.isEmpty()) {
@@ -102,8 +113,9 @@ public class RegistroLogin extends HttpServlet {
      * @param nombre Nombre del usuario
      * @param email Email del usuario
      * @param password Contraseña del usuario
+     * @return Usuario que se ha registrado
      */
-    private void darAltaUsuario(String nombre, String email, String password) {
+    private Usuario darAltaUsuario(String nombre, String email, String password) {
         GenericoDAO genDao = new GenericoDAO();
         String encriptada = "";
         
@@ -117,13 +129,15 @@ public class RegistroLogin extends HttpServlet {
         Canal canal = new Canal(0, "", 0, 0, usuario);
         genDao.add(usuario);
         genDao.add(canal);
+        
+        return usuario;
     }
     
     /**
      * Inicia sesión si hay coincidencias con los datos, sino devuelve false
      * @param nombre Usuario que intenta iniciar sesión
      * @param password Contraseña del usuario
-     * @return 
+     * @return Usuario que se ha logueado
      */
     private Usuario iniciarSesion(String nombre, String password){
         String encriptada = "";

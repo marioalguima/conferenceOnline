@@ -60,7 +60,7 @@
 
                                 <!-- PARTE REGISTRO DE USUARIO -->
                                 <div id="registro" class="tab-pane fade">
-                                    <form action="${sessionScope.path}/RegistroLogin" method="post" class="form-horizontal">
+                                    <form action="${sessionScope.path}/ControlUsuario" method="post" class="form-horizontal">
                                         <fieldset class="container-fluid">
                                             <legend>Formulario de Registro</legend>
                                             <h4 id="errorRegistro" class="text-danger"></h4>
@@ -121,13 +121,24 @@
                 <div class="col-xs-6 col-md-5" style="padding-left: 15%;">
                     <c:choose>
                         <c:when test="${sessionScope.USUARIO==null}">
-                            <div class="col-xs-12 col-md-12">
+                            <div class="col-xs-12 col-md-12 btn-group">
                                 <button id="btnEntrar" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Iniciar sesi&oacute;n</button>
                                 <button id="btnRegistro" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Registrarse</button>
                             </div>
                         </c:when>
                         <c:when test="${sessionScope.USUARIO!=null}">
-                            <button class="btn btn-default" style="border-radius: 0;">Mi canal</button>
+                            <div class="btn-group">
+                                <button id="miCuenta" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-radius: 0;">
+                                    Mi cuenta
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">Mi canal</a></li>
+                                    <li><a href="#">Configurar datos de cuenta</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="" id="menuCerrarSesion">Cerrar sesi&oacute;n</a></li>
+                                </ul>
+                            </div>
                         </c:when>                            
                     </c:choose>
                 </div>
