@@ -35,62 +35,64 @@
 
                                 <!-- PARTE INICIO DE SESION -->
                                 <div id="inicioSesion" class="tab-pane fade in active">
-                                    <form action="${sessionScope.path}" method="post" class="form-horizontal">
+                                    <form id="formLogin" class="form-horizontal">
                                         <fieldset class="container-fluid">
                                             <legend>Iniciar Sesi&oacute;n</legend>
-                                            <c:if test="${errorEntrada!=null}">
-                                                <h4 class="text-danger">${errorEntrada}</h4>
-                                            </c:if>
+                                            <h4 id="errorLogin" class="text-danger"></h4>
                                             <div class="form-group">
-                                                <label for="usuarioLogin">Usuario</label>
-                                                <input type="text" class="form-control" id="usuarioLogin" name="usuario" maxlength="45" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                <label class="col-sm-12" for="usuarioLogin">Usuario</label>
+                                                <div class="col-sm-11">
+                                                    <input type="text" class="form-control" id="usuarioLogin" name="usuarioLogin" maxlength="45" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                </div>
+                                                <span id="errorUsuarioLogin" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div>
                                             <div class="form-group">
-                                                <label for="passwordLogin">Contrase&ntilde;a</label>
-                                                <input type="password" class="form-control" id="passwordLogin" name="passwordLogin" maxlength="50" minlength="3" placeholder="Introduzca su contraseña (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                <label class="col-sm-12" for="passwordLogin">Contrase&ntilde;a</label>
+                                                <div class="col-sm-11">
+                                                    <input type="password" class="form-control" id="passwordLogin" name="passwordLogin" maxlength="15" minlength="3" placeholder="Introduzca su contraseña (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                </div>
+                                                <span id="errorPasswordLogin" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div><br/>
-                                            <input type="submit" class="btn btn-default" name="iniciarSesion" value="Iniciar sesión"/>
+                                            <button class="btn btn-default" id="btnIniciarSesion" value="Entrar">Iniciar sesi&oacute;n</button>
                                         </fieldset>
                                     </form>
                                 </div>
 
                                 <!-- PARTE REGISTRO DE USUARIO -->
                                 <div id="registro" class="tab-pane fade">
-                                    <form action="${sessionScope.path}/" method="post" class="form-horizontal">
+                                    <form action="${sessionScope.path}/RegistroLogin" method="post" class="form-horizontal">
                                         <fieldset class="container-fluid">
                                             <legend>Formulario de Registro</legend>
-                                            <c:if test="${errorRegistro!=null}">
-                                                <h4 class="text-danger">${errorRegistro}</h4>
-                                            </c:if>
+                                            <h4 id="errorRegistro" class="text-danger"></h4>
                                             <div class="form-group">
                                                 <label class="col-sm-12" for="usuarioRegistro">Nombre de usuario</label>
                                                 <div class="col-sm-11">
                                                     <input type="text" class="form-control" id="usuarioRegistro" name="usuarioRegistro" maxlength="45" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
                                                 </div>
-                                                <span id="errorNombreRegistro" class="glyphicon glyphicon-remove text-danger col-sm-1" style="visibility: hidden;"></span>
+                                                <span id="errorNombreRegistro" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-12" for="emailRegistro">Email</label>
                                                 <div class="col-sm-11">
-                                                    <input type="email" class="form-control" id="emailRegistro" name="email" maxlength="45" placeholder="Introduzca su email" required/>
+                                                    <input type="email" class="form-control" id="emailRegistro" name="emailRegistro" maxlength="45" placeholder="Introduzca su email" required pattern="[a-zA-Z0-9_.]+@[a-zA-Z0-9]+[.][a-zA-Z]{1,5}"/>
                                                 </div>
-                                                <span id="errorEmailRegistro" class="glyphicon glyphicon-remove text-danger col-sm-1" style="visibility: hidden;"></span>
+                                                <span id="errorEmailRegistro" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-12" for="passwordRegistro">Contrase&ntilde;a</label>
                                                 <div class="col-sm-11">
-                                                    <input type="password" class="form-control" id="passwordRegistro" name="password" maxlength="50" minlength="3" placeholder="Introduzca su contraseña (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                    <input type="password" class="form-control" id="passwordRegistro" name="passwordRegistro" maxlength="15" minlength="3" placeholder="Introduzca su contraseña (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
                                                 </div>
-                                                <span id="errorPasswordRegistro" class="glyphicon glyphicon-remove text-danger col-sm-1" style="visibility: hidden;"></span>
+                                                <span id="errorPasswordRegistro" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div>                    
                                             <div class="form-group">
                                                 <label class="col-sm-12" for="passwordRepetida">Repita la Contrase&ntilde;a</label>
                                                 <div class="col-sm-11">
-                                                    <input type="password" class="form-control" id="passwordRepetida" name="passwordRepetida" maxlength="50" minlength="3" placeholder="Repetir contraseña" required/>
+                                                    <input type="password" class="form-control" id="passwordRepetida" name="passwordRepetida" maxlength="15" minlength="3" placeholder="Repetir contraseña" disabled="true" required/>
                                                 </div>
-                                                <span id="errorPasswordRegistro" class="glyphicon glyphicon-remove text-danger col-sm-1" style="visibility: hidden;"></span>
+                                                <span class="col-sm-1"></span>
                                             </div><br/>
-                                            <input type="submit" class="btn btn-default" name="registroUsuario" value="Registrarse"/>
+                                            <input type="submit" id="btnRegistrarse" class="btn btn-default" name="peticion" value="Registrarse"/>
                                         </fieldset>
                                     </form>
                                 </div>
