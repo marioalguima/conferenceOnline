@@ -16,7 +16,7 @@
         <script src="${sessionScope.path}/js/bootstrap.min.js"></script>
         <script src="${sessionScope.path}/js/eventos.js"></script>
     </head>
-    <body class="container-fluid">
+    <body class="container-fluid" style="padding-left: 0; padding-right: 0;">
 
         <!-- MODAL DE REGISTRO Y LOGIN DE USUARIOS -->
         <c:if test="${sessionScope.USUARIO==null}">
@@ -105,7 +105,7 @@
             </div>
         </c:if>
         <!-- HEADER COMUN A TODAS LAS PÁGINAS -->
-        <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 1%; margin-top: 0; ">
+        <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 1%; margin-top: 0; margin-bottom: 0; border-bottom: 0;">
             <div class="col-xs-12 col-md-3">
                 <a href="${sessionScope.path}"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" class="img-responsive" style="margin-left: 30%; max-width: 50%"/></a>
             </div>
@@ -134,7 +134,7 @@
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#">Mi canal</a></li>
-                                    <li><a href="#">Configurar datos de cuenta</a></li>
+                                    <li><a href="${sessionScope.path}/configuracionCuenta.jsp">Configurar datos de cuenta</a></li>
                                     <li class="divider"></li>
                                     <li><a href="" id="menuCerrarSesion">Cerrar sesi&oacute;n</a></li>
                                 </ul>

@@ -3,6 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+var emailAntiguo;
+var passwordAntiguo;
+
 window.onload = function () {
     if (document.getElementById("btnEntrar") !== null) {
         document.getElementById("btnEntrar").onclick = eventoClickEntrar;
@@ -13,8 +16,17 @@ window.onload = function () {
     if (document.getElementById("btnIniciarSesion") !== null) {
         document.getElementById("btnIniciarSesion").onclick = eventoClickLogin;
     }
-    if(document.getElementById("menuCerrarSesion") !== null) {
+    if (document.getElementById("menuCerrarSesion") !== null) {
         document.getElementById("menuCerrarSesion").onclick = eventoCerrarSesion;
+    }
+    if (document.getElementById("editarEmail") !== null) {
+        document.getElementById("editarEmail").onclick = eventoClickEditarEmail;
+    }
+    if (document.getElementById("editarPassword") !== null) {
+        document.getElementById("editarPassword").onclick = eventoClickEditarPassword;
+    }
+    if (document.getElementById("btnGuardarCambios") !== null) {
+        document.getElementById("btnGuardarCambios").onclick = eventoClickGuardarCambios;
     }
     if (document.getElementById("usuarioRegistro") !== null) {
         document.getElementById("usuarioRegistro").onblur = eventoPerdidaFocoUsuarioRegistro;
@@ -28,8 +40,26 @@ window.onload = function () {
     if (document.getElementById("passwordRepetida") !== null) {
         document.getElementById("passwordRepetida").onblur = eventoPerdidaFocoRepetidaRegistro;
     }
-    if(document.getElementById("formLogin") !== null) {
-        document.getElementById("formLogin").onsubmit = function(){ return false; };
+    if (document.getElementById("emailConfCuenta") !== null) {
+        emailAntiguo = document.getElementById("emailConfCuenta").value;
+        document.getElementById("emailConfCuenta").onblur = eventoPerdidaFocoEmailConfCuenta;
+    }
+    if (document.getElementById("passwordConfCuenta") !== null) {
+        passwordAntiguo = document.getElementById("passwordConfCuenta").value;
+        document.getElementById("passwordConfCuenta").onblur = eventoPerdidaFocoPasswordConfCuenta;
+    }
+    if (document.getElementById("repetidaConfCuenta") !== null) {
+        document.getElementById("repetidaConfCuenta").onblur = eventoPerdidaFocoRepetidaConfCuenta;
+    }
+    if (document.getElementById("formLogin") !== null) {
+        document.getElementById("formLogin").onsubmit = function () {
+            return false;
+        };
+    }
+    if (document.getElementById("formConfCuenta") !== null) {
+        document.getElementById("formConfCuenta").onsubmit = function () {
+            return false;
+        };
     }
 };
 
@@ -50,7 +80,7 @@ function eventoClickEntrar() {
 function eventoClickLogin() {
     var nombreUsuario = document.getElementById("usuarioLogin").value;
     var passwordLogin = document.getElementById("passwordLogin").value;
-    if(nombreUsuario.length >= 3 && passwordLogin.length >= 3 && /[a-zA-Z0-9]*/.test(nombreUsuario) && /[a-zA-Z0-9]*/.test(passwordLogin)){
+    if (nombreUsuario.length >= 3 && passwordLogin.length >= 3 && /[a-zA-Z0-9]*/.test(nombreUsuario) && /[a-zA-Z0-9]*/.test(passwordLogin)) {
         $.ajax({
             url: "ControlUsuario",
             type: "POST",
@@ -58,7 +88,7 @@ function eventoClickLogin() {
             success: function (respuesta) {
                 if (respuesta === "notok") {
                     document.getElementById("errorLogin").innerHTML = "Nombre de usuario o contraseña incorrectos";
-                }else{
+                } else {
                     document.getElementById("errorLogin").innerHTML = "";
                     location.reload(true);
                 }
@@ -67,15 +97,124 @@ function eventoClickLogin() {
     }
 }
 
-function eventoCerrarSesion() {
-    $.ajax({
+function eventoClickGuardarCambios() {
+    var email = document.getElementById("emailConfCuenta").value;
+    var password = document.getElementById("passwordConfCuenta").value;
+    if (email !== emailAntiguo && password !== passwordAntiguo) {
+        $.ajax({
             url: "ControlUsuario",
             type: "POST",
-            data: {"peticion": "cerrarSesion"},
-            success: function () {
+            data: {"peticion": "modificarDatos", "email": email, "password": password},
+            success: function (respuesta) {
+                if (respuesta === "ok") {
+                    alert("Los datos se han actualizado satisfactoriamente");
+                } else {
+                    alert("Ha ocurrido un error y no se han podido actualizar los datos");
+                }
                 location.reload(true);
             }
         });
+    }// TODO COSA ESTA PARA QUE NO META LO QUE NO TIENE QUE METER
+}
+
+function eventoClickEditarEmail() {
+    document.getElementById("emailConfCuenta").disabled = false;
+    document.getElementById("errorEmailConfCuenta").style = "visibility: hidden";
+    document.getElementById("mensajeErrorEmailConf").innerHTML = "";
+}
+
+function eventoClickEditarPassword() {
+    document.getElementById("repetidaBloque").style = "display: inline";
+    document.getElementById("repetidaConfCuenta").value = "";
+    document.getElementById("passwordConfCuenta").disabled = false;
+    document.getElementById("errorPasswordConfCuenta").style = "visibility: hidden";
+    document.getElementById("mensajeErrorPasswordConf").innerHTML = "";
+}
+
+function eventoCerrarSesion() {
+    $.ajax({
+        url: "ControlUsuario",
+        type: "POST",
+        data: {"peticion": "cerrarSesion"},
+        success: function () {
+            location.replace("index.jsp");
+        }
+    });
+}
+
+function eventoPerdidaFocoEmailConfCuenta() {
+    var email = document.getElementById("emailConfCuenta").value;
+    if (email === emailAntiguo) {
+        document.getElementById("emailConfCuenta").disabled = true;
+        if (document.getElementById("errorPasswordConfCuenta").className === "glyphicon glyphicon-ok text-success") {
+            document.getElementById("btnGuardarCambios").disabled = false;
+        } else {
+            document.getElementById("btnGuardarCambios").disabled = true;
+        }
+    } else if (email.length >= 8 && /[a-zA-Z0-9_.]+@[a-zA-Z0-9]+[.][a-zA-Z]{1,5}/.test(email)) {
+        $.ajax({
+            url: "ControlUsuario",
+            type: "POST",
+            data: {"peticion": "comprobarEmailRegistro", "email": email},
+            success: function (respuesta) {
+                if (respuesta === "ok") {
+                    document.getElementById("errorEmailConfCuenta").className = "glyphicon glyphicon-ok text-success";
+                    document.getElementById("errorEmailConfCuenta").style = "visibility: visible";
+                    document.getElementById("mensajeErrorEmailConf").innerHTML = "";
+                    document.getElementById("btnGuardarCambios").disabled = false;
+                } else {
+                    document.getElementById("errorEmailConfCuenta").className = "glyphicon glyphicon-remove text-danger col-sm-1";
+                    document.getElementById("errorEmailConfCuenta").style = "visibility: visible";
+                    document.getElementById("mensajeErrorEmailConf").innerHTML = "Ese email está en uso, utilice otro email.";
+                    document.getElementById("btnGuardarCambios").disabled = true;
+                }
+            }
+        });
+    } else {
+        document.getElementById("emailConfCuenta").value = emailAntiguo;
+        document.getElementById("emailConfCuenta").disabled = true;
+        document.getElementById("errorEmailConfCuenta").className = "glyphicon glyphicon-remove text-danger";
+        document.getElementById("errorEmailConfCuenta").style = "visibility: visible";
+        document.getElementById("mensajeErrorEmailConf").innerHTML = "El email no es válido, introduzca un email con un formato correcto.";
+        document.getElementById("btnGuardarCambios").disabled = true;
+    }
+}
+
+function eventoPerdidaFocoPasswordConfCuenta() {
+    var password = document.getElementById("passwordConfCuenta").value;
+    if (password === passwordAntiguo) {
+        document.getElementById("repetidaBloque").style = "display: none";
+        document.getElementById("passwordConfCuenta").disabled = true;
+        if (document.getElementById("errorEmailConfCuenta").className === "glyphicon glyphicon-ok text-success") {
+            document.getElementById("btnGuardarCambios").disabled = false;
+        } else {
+            document.getElementById("btnGuardarCambios").disabled = true;
+        }
+    } else if (!(password.length >= 3 && /[a-zA-Z0-9]*/.test(password))) {
+        document.getElementById("repetidaBloque").style = "display: none";
+        document.getElementById("passwordConfCuenta").disabled = true;
+        document.getElementById("passwordConfCuenta").value = passwordAntiguo;
+        document.getElementById("errorPasswordConfCuenta").className = "glyphicon glyphicon-remove text-danger";
+        document.getElementById("errorPasswordConfCuenta").style = "visibility: visible";
+        document.getElementById("mensajeErrorPasswordConf").innerHTML = "La contraseña no es válida, introduzca una contraseña con un formato correcto.";
+        document.getElementById("btnGuardarCambios").disabled = true;
+    }
+}
+
+function eventoPerdidaFocoRepetidaConfCuenta() {
+    var password = document.getElementById("passwordConfCuenta").value;
+    var repetida = document.getElementById("repetidaConfCuenta").value;
+    if (password === repetida) {
+        document.getElementById("errorPasswordConfCuenta").className = "glyphicon glyphicon-ok text-success";
+        document.getElementById("errorPasswordConfCuenta").style = "visibility: visible";
+        document.getElementById("mensajeErrorPasswordConf").innerHTML = "";
+        document.getElementById("btnGuardarCambios").disabled = false;
+    } else {
+        document.getElementById("errorPasswordConfCuenta").className = "glyphicon glyphicon-remove text-danger";
+        document.getElementById("errorPasswordConfCuenta").style = "visibility: visible";
+        document.getElementById("mensajeErrorPasswordConf").innerHTML = "Las contraseñas no coinciden.";
+        document.getElementById("btnGuardarCambios").disabled = true;
+    }
 }
 
 function eventoPerdidaFocoUsuarioRegistro() {

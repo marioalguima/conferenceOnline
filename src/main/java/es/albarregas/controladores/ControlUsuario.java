@@ -73,23 +73,30 @@ public class ControlUsuario extends HttpServlet {
                 break;
             case "Registrarse":
                 usuario = darAltaUsuario(request.getParameter("usuarioRegistro"), request.getParameter("emailRegistro"), request.getParameter("passwordRegistro"));
-                sesion = request.getSession(true);                
+                sesion = request.getSession(true);
                 sesion.setAttribute("USUARIO", usuario);
                 response.sendRedirect("index.jsp");
                 break;
             case "Entrar":
                 usuario = iniciarSesion(request.getParameter("usuarioLogin"), request.getParameter("passwordLogin"));
-                if(usuario != null){
+                if (usuario != null) {
                     sesion = request.getSession(true);
                     sesion.setAttribute("USUARIO", usuario);
-                }else{
+                } else {
                     respuesta = "notok";
-                }                
+                }
                 break;
             case "cerrarSesion":
                 sesion = request.getSession(false);
-                if(sesion != null){
+                if (sesion != null) {
                     sesion.invalidate();
+                }
+                break;
+            case "modificarDatos":
+                if (modificarUsuario(request.getParameter("email"), request.getParameter("password"), request)) {
+                    respuesta = "ok";
+                } else {
+                    respuesta = "notok";
                 }
                 break;
         }
@@ -108,8 +115,38 @@ public class ControlUsuario extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private boolean modificarUsuario(String email, String password, HttpServletRequest request) {
+        HttpSession sesion = request.getSession(false);
+        Usuario usuario = null;
+        String encriptada = "";
+        try {
+            encriptada = Util.encriptarMD5(password);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        if (sesion != null) {
+            usuario = (Usuario) sesion.getAttribute("USUARIO");
+            if (usuario != null) {
+                if (!usuario.getEmail().equals(email) || !usuario.getPassword().equals(encriptada)) {
+                    usuario.setEmail(email);
+                    usuario.setPassword(encriptada);
+                    new GenericoDAO().update(usuario);
+                    sesion.setAttribute("USUARIO", usuario);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Da de alta un usuario nuevo en la base de datos
+     *
      * @param nombre Nombre del usuario
      * @param email Email del usuario
      * @param password Contraseña del usuario
@@ -118,38 +155,39 @@ public class ControlUsuario extends HttpServlet {
     private Usuario darAltaUsuario(String nombre, String email, String password) {
         GenericoDAO genDao = new GenericoDAO();
         String encriptada = "";
-        
-        try{
+
+        try {
             encriptada = Util.encriptarMD5(password);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
-        
+
         Usuario usuario = new Usuario(0, nombre, email, encriptada, 'n');
         Canal canal = new Canal(0, "", 0, 0, usuario);
         genDao.add(usuario);
         genDao.add(canal);
-        
+
         return usuario;
     }
-    
+
     /**
      * Inicia sesión si hay coincidencias con los datos, sino devuelve false
+     *
      * @param nombre Usuario que intenta iniciar sesión
      * @param password Contraseña del usuario
      * @return Usuario que se ha logueado
      */
-    private Usuario iniciarSesion(String nombre, String password){
+    private Usuario iniciarSesion(String nombre, String password) {
         String encriptada = "";
         Usuario usuario = null;
         ArrayList<Usuario> usuarios;
-        try{
+        try {
             encriptada = Util.encriptarMD5(password);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
-        usuarios = (ArrayList) new GenericoDAO().get("Usuario where nombre='" + nombre + "' and password='" + encriptada + "'");
-        if(!usuarios.isEmpty()){
+        usuarios = (ArrayList) new GenericoDAO().get("Usuario where nombre='" + nombre + "' and password='" + encriptada + "' and tipo!='b'");
+        if (!usuarios.isEmpty()) {
             usuario = usuarios.get(0);
         }
         return usuario;
@@ -157,6 +195,7 @@ public class ControlUsuario extends HttpServlet {
 
     /**
      * Devuelve si el nombre está disponible o no
+     *
      * @param nombre Nombre de usuario a comprobar si existe en la base de datos
      * @return un Boolean sobre si existe o no el nombre
      */
@@ -168,6 +207,7 @@ public class ControlUsuario extends HttpServlet {
 
     /**
      * Devuelve si el email está disponible o no
+     *
      * @param email Email de usuario a comprobar si existe en la base de datos
      * @return un Boolean sobre si existe o no el email
      */

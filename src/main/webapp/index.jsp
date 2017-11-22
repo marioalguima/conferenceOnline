@@ -7,5 +7,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="cabecera.jsp"/>
 
-        <h1>Hello World!</h1>
-
+<div class="container-fluid">
+    <h1>Index</h1>
+</div>
