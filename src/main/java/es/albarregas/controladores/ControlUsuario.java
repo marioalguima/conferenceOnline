@@ -93,10 +93,26 @@ public class ControlUsuario extends HttpServlet {
                 }
                 break;
             case "modificarDatos":
-                if (modificarUsuario(request.getParameter("email"), request.getParameter("password"), request)) {
-                    respuesta = "ok";
-                } else {
-                    respuesta = "notok";
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+                if (email != null && password != null) {
+                    if (modificarUsuario(email, password, request)) {
+                        respuesta = "ok";
+                    } else {
+                        respuesta = "notok";
+                    }
+                } else if (email != null) {
+                    if (modificarUsuario(email, "", request)) {
+                        respuesta = "ok";
+                    } else {
+                        respuesta = "notok";
+                    }
+                } else if (password != null) {
+                    if (modificarUsuario("", password, request)) {
+                        respuesta = "ok";
+                    } else {
+                        respuesta = "notok";
+                    }
                 }
                 break;
         }
@@ -119,21 +135,23 @@ public class ControlUsuario extends HttpServlet {
         HttpSession sesion = request.getSession(false);
         Usuario usuario = null;
         String encriptada = "";
-        try {
-            encriptada = Util.encriptarMD5(password);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+
         if (sesion != null) {
             usuario = (Usuario) sesion.getAttribute("USUARIO");
             if (usuario != null) {
-                if (!usuario.getEmail().equals(email) || !usuario.getPassword().equals(encriptada)) {
+                try {
+                    encriptada = Util.encriptarMD5(password);
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+                if (!email.isEmpty() && !password.isEmpty()) {
                     usuario.setEmail(email);
                     usuario.setPassword(encriptada);
-                    new GenericoDAO().update(usuario);
-                    sesion.setAttribute("USUARIO", usuario);
-                    return true;
-                } else {
+                } else if (!email.isEmpty()) {
+                    usuario.setEmail(email);
+                } else if(!password.isEmpty()){
+                    usuario.setPassword(encriptada);
+                }else{
                     return false;
                 }
             } else {
@@ -142,6 +160,10 @@ public class ControlUsuario extends HttpServlet {
         } else {
             return false;
         }
+
+        new GenericoDAO().update(usuario);
+        sesion.setAttribute("USUARIO", usuario);
+        return true;
     }
 
     /**

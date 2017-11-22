@@ -100,11 +100,19 @@ function eventoClickLogin() {
 function eventoClickGuardarCambios() {
     var email = document.getElementById("emailConfCuenta").value;
     var password = document.getElementById("passwordConfCuenta").value;
+    var datos = null;
     if (email !== emailAntiguo && password !== passwordAntiguo) {
+        datos = {"peticion": "modificarDatos", "email": email, "password": password};
+    } else if (email !== emailAntiguo) {
+        datos = {"peticion": "modificarDatos", "email": email};
+    } else if (password !== passwordAntiguo) {
+        datos = {"peticion": "modificarDatos", "password": password};
+    }
+    if (datos !== null) {
         $.ajax({
             url: "ControlUsuario",
             type: "POST",
-            data: {"peticion": "modificarDatos", "email": email, "password": password},
+            data: datos,
             success: function (respuesta) {
                 if (respuesta === "ok") {
                     alert("Los datos se han actualizado satisfactoriamente");
@@ -114,7 +122,7 @@ function eventoClickGuardarCambios() {
                 location.reload(true);
             }
         });
-    }// TODO COSA ESTA PARA QUE NO META LO QUE NO TIENE QUE METER
+    }
 }
 
 function eventoClickEditarEmail() {
