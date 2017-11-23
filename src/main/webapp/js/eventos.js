@@ -25,8 +25,14 @@ window.onload = function () {
     if (document.getElementById("editarPassword") !== null) {
         document.getElementById("editarPassword").onclick = eventoClickEditarPassword;
     }
+    if (document.getElementById("editarDescripcion") !== null) {
+        document.getElementById("editarDescripcion").onclick = eventoClickEditarDescripcion;
+    }
     if (document.getElementById("btnGuardarCambios") !== null) {
         document.getElementById("btnGuardarCambios").onclick = eventoClickGuardarCambios;
+    }
+    if (document.getElementById("btnGuardarCambiosCanal") !== null) {
+        document.getElementById("btnGuardarCambiosCanal").onclick = eventoClickGuardarCambiosCanal;
     }
     if (document.getElementById("usuarioRegistro") !== null) {
         document.getElementById("usuarioRegistro").onblur = eventoPerdidaFocoUsuarioRegistro;
@@ -39,6 +45,10 @@ window.onload = function () {
     }
     if (document.getElementById("passwordRepetida") !== null) {
         document.getElementById("passwordRepetida").onblur = eventoPerdidaFocoRepetidaRegistro;
+    }    
+    if (document.getElementById("desModCanal") !== null) {
+        descripcionAntiguo = document.getElementById("desModCanal").value;
+        document.getElementById("desModCanal").onblur = eventoPerdidaFocoDescripcionCanal;
     }
     if (document.getElementById("emailConfCuenta") !== null) {
         emailAntiguo = document.getElementById("emailConfCuenta").value;
@@ -58,6 +68,11 @@ window.onload = function () {
     }
     if (document.getElementById("formConfCuenta") !== null) {
         document.getElementById("formConfCuenta").onsubmit = function () {
+            return false;
+        };
+    }
+    if (document.getElementById("formConfCanal") !== null) {
+        document.getElementById("formConfCanal").onsubmit = function () {
             return false;
         };
     }
@@ -102,11 +117,11 @@ function eventoClickGuardarCambios() {
     var password = document.getElementById("passwordConfCuenta").value;
     var datos = null;
     if (email !== emailAntiguo && password !== passwordAntiguo) {
-        datos = {"peticion": "modificarDatos", "email": email, "password": password};
+        datos = {"peticion": "modificarDatosCuenta", "email": email, "password": password};
     } else if (email !== emailAntiguo) {
-        datos = {"peticion": "modificarDatos", "email": email};
+        datos = {"peticion": "modificarDatosCuenta", "email": email, "password": ""};
     } else if (password !== passwordAntiguo) {
-        datos = {"peticion": "modificarDatos", "password": password};
+        datos = {"peticion": "modificarDatosCuenta", "email": "", "password": password};
     }
     if (datos !== null) {
         $.ajax({
@@ -123,6 +138,33 @@ function eventoClickGuardarCambios() {
             }
         });
     }
+}
+
+function eventoClickGuardarCambiosCanal() {
+    var descripcion = document.getElementById("desModCanal").value;
+    var datos = null;
+    if (descripcion !== descripcionAntiguo) {
+        datos = {"peticion": "modificarDatosCanal", "descripcion": descripcion};
+    }
+    if (datos !== null) {
+        $.ajax({
+            url: "ControlUsuario",
+            type: "POST",
+            data: datos,
+            success: function (respuesta) {
+                if (respuesta === "ok") {
+                    alert("Los datos se han actualizado satisfactoriamente");
+                } else {
+                    alert("Ha ocurrido un error y no se han podido actualizar los datos");
+                }
+                location.reload(true);
+            }
+        });
+    }
+}
+
+function eventoClickEditarDescripcion() {
+    document.getElementById("desModCanal").disabled = false;
 }
 
 function eventoClickEditarEmail() {
@@ -144,16 +186,28 @@ function eventoCerrarSesion() {
         url: "ControlUsuario",
         type: "POST",
         data: {"peticion": "cerrarSesion"},
-        success: function () {
-            location.replace("index.jsp");
+        success: function(respuesta){
+            if(respuesta === "ok"){
+                location.href = "index.jsp";
+            }
         }
-    });
+    });    
+}
+
+function eventoPerdidaFocoDescripcionCanal() {
+    var descripcion = document.getElementById("desModCanal").value;
+    if(descripcion === descripcionAntiguo){
+        document.getElementById("desModCanal").disabled = true;
+    } else {
+        document.getElementById("btnGuardarCambiosCanal").disabled = false;
+    }
 }
 
 function eventoPerdidaFocoEmailConfCuenta() {
     var email = document.getElementById("emailConfCuenta").value;
     if (email === emailAntiguo) {
         document.getElementById("emailConfCuenta").disabled = true;
+        document.getElementById("errorEmailConfCuenta").style = "visibility: hidden";
         if (document.getElementById("errorPasswordConfCuenta").className === "glyphicon glyphicon-ok text-success") {
             document.getElementById("btnGuardarCambios").disabled = false;
         } else {
@@ -221,6 +275,8 @@ function eventoPerdidaFocoRepetidaConfCuenta() {
         document.getElementById("errorPasswordConfCuenta").className = "glyphicon glyphicon-remove text-danger";
         document.getElementById("errorPasswordConfCuenta").style = "visibility: visible";
         document.getElementById("mensajeErrorPasswordConf").innerHTML = "Las contraseñas no coinciden.";
+        document.getElementById("repetidaConfCuenta").value = "";
+        document.getElementById("repetidaBloque").style = "display: none";
         document.getElementById("btnGuardarCambios").disabled = true;
     }
 }

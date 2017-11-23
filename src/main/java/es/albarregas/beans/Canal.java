@@ -14,35 +14,36 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "canales")
-public class Canal implements Serializable{
-    
+public class Canal implements Serializable {
+
     @Id
-    @Column(name="idCanal")
+    @Column(name = "idCanal")
     private int idCanal;
-    
-    @Column(name="descripcion")
+
+    @Column(name = "descripcion")
     private String descripcion;
     
-    @Column(name="imgUsuario")
-    private int imgUsuario;
-    
-    @Column(name="imgPortada")
-    private int imgPortada;
-    
+    @Column(name = "titulo")
+    private String titulo;
+
+    @OneToOne
+    @JoinColumn(name = "imgUsuario")
+    private Imagen imgUsuario;
+
     @MapsId
     @OneToOne
     @JoinColumn(name = "idCanal")
     private Usuario usuario;
-    
-    public Canal(){
-        
+
+    public Canal() {
+
     }
-    
-    public Canal(int idCanal, String descripcion, int imgUsuario, int imgPortada, Usuario usuario){
+
+    public Canal(int idCanal, String descripcion, String titulo, Imagen imgUsuario, Usuario usuario) {
         this.idCanal = idCanal;
         this.descripcion = descripcion;
         this.imgUsuario = imgUsuario;
-        this.imgPortada = imgPortada;
+        this.titulo = titulo;
         this.usuario = usuario;
     }
 
@@ -77,29 +78,29 @@ public class Canal implements Serializable{
     /**
      * @return the imgUsuario
      */
-    public int getImgUsuario() {
+    public Imagen getImgUsuario() {
         return imgUsuario;
     }
 
     /**
      * @param imgUsuario the imgUsuario to set
      */
-    public void setImgUsuario(int imgUsuario) {
+    public void setImgUsuario(Imagen imgUsuario) {
         this.imgUsuario = imgUsuario;
     }
 
     /**
-     * @return the imgPortada
+     * @return the titulo
      */
-    public int getImgPortada() {
-        return imgPortada;
+    public String getTitulo() {
+        return titulo;
     }
 
     /**
-     * @param imgPortada the imgPortada to set
+     * @param titulo the titulo to set
      */
-    public void setImgPortada(int imgPortada) {
-        this.imgPortada = imgPortada;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     /**
@@ -115,5 +116,5 @@ public class Canal implements Serializable{
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
-    
+
 }

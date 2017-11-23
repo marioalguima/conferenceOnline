@@ -49,5 +49,6 @@ Contributor(s):
     
     <mapping class="es.albarregas.beans.Usuario"/>
     <mapping class="es.albarregas.beans.Canal"/>
+    <mapping class="es.albarregas.beans.Imagen"/>
   </session-factory>
 </hibernate-configuration>
