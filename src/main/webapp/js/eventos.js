@@ -5,6 +5,8 @@
  */
 var emailAntiguo;
 var passwordAntiguo;
+var descripcionAntiguo;
+var tituloAntiguo;
 
 window.onload = function () {
     if (document.getElementById("btnEntrar") !== null) {
@@ -28,6 +30,9 @@ window.onload = function () {
     if (document.getElementById("editarDescripcion") !== null) {
         document.getElementById("editarDescripcion").onclick = eventoClickEditarDescripcion;
     }
+    if (document.getElementById("btnEditarTitulo") !== null) {
+        document.getElementById("btnEditarTitulo").onclick = eventoClickEditarTitulo;
+    }
     if (document.getElementById("btnGuardarCambios") !== null) {
         document.getElementById("btnGuardarCambios").onclick = eventoClickGuardarCambios;
     }
@@ -45,10 +50,14 @@ window.onload = function () {
     }
     if (document.getElementById("passwordRepetida") !== null) {
         document.getElementById("passwordRepetida").onblur = eventoPerdidaFocoRepetidaRegistro;
-    }    
+    }
     if (document.getElementById("desModCanal") !== null) {
         descripcionAntiguo = document.getElementById("desModCanal").value;
         document.getElementById("desModCanal").onblur = eventoPerdidaFocoDescripcionCanal;
+    }
+    if (document.getElementById("TituloConfCanal") !== null) {
+        tituloAntiguo = document.getElementById("TituloConfCanal").value;
+        document.getElementById("TituloConfCanal").onblur = eventoPerdidaFocoTituloCanal;
     }
     if (document.getElementById("emailConfCuenta") !== null) {
         emailAntiguo = document.getElementById("emailConfCuenta").value;
@@ -142,9 +151,14 @@ function eventoClickGuardarCambios() {
 
 function eventoClickGuardarCambiosCanal() {
     var descripcion = document.getElementById("desModCanal").value;
+    var titulo = document.getElementById("TituloConfCanal").value;
     var datos = null;
-    if (descripcion !== descripcionAntiguo) {
-        datos = {"peticion": "modificarDatosCanal", "descripcion": descripcion};
+    if (descripcion !== descripcionAntiguo && titulo !== tituloAntiguo) {
+        datos = {"peticion": "modificarDatosCanal", "titulo": titulo, "descripcion": descripcion};
+    }else if(descripcion !== descripcionAntiguo){
+        datos = {"peticion": "modificarDatosCanal", "titulo": tituloAntiguo, "descripcion": descripcion};
+    } else {
+        datos = {"peticion": "modificarDatosCanal", "titulo": titulo, "descripcion": descripcionAntiguo};
     }
     if (datos !== null) {
         $.ajax({
@@ -167,6 +181,10 @@ function eventoClickEditarDescripcion() {
     document.getElementById("desModCanal").disabled = false;
 }
 
+function eventoClickEditarTitulo() {
+    document.getElementById("TituloConfCanal").disabled = false;
+}
+
 function eventoClickEditarEmail() {
     document.getElementById("emailConfCuenta").disabled = false;
     document.getElementById("errorEmailConfCuenta").style = "visibility: hidden";
@@ -186,17 +204,26 @@ function eventoCerrarSesion() {
         url: "ControlUsuario",
         type: "POST",
         data: {"peticion": "cerrarSesion"},
-        success: function(respuesta){
-            if(respuesta === "ok"){
+        success: function (respuesta) {
+            if (respuesta === "ok") {
                 location.href = "index.jsp";
             }
         }
-    });    
+    });
+}
+
+function eventoPerdidaFocoTituloCanal() {
+    var titulo = document.getElementById("TituloConfCanal").value;
+    if(titulo === tituloAntiguo){
+        document.getElementById("TituloConfCanal").value;
+    } else {
+        document.getElementById("btnGuardarCambiosCanal").disabled = false;
+    }
 }
 
 function eventoPerdidaFocoDescripcionCanal() {
     var descripcion = document.getElementById("desModCanal").value;
-    if(descripcion === descripcionAntiguo){
+    if (descripcion === descripcionAntiguo) {
         document.getElementById("desModCanal").disabled = true;
     } else {
         document.getElementById("btnGuardarCambiosCanal").disabled = false;

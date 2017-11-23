@@ -52,7 +52,7 @@
                     <dl class="dl-horizontal">
                         <form id="formConfCanal" class="form-inline">
                             <dt>T&iacute;tulo: </dt><dd>
-                                <input type="text" id="textConfCanal" class="form-control" value="${sessionScope.USUARIO.canal.titulo}" size="45" maxlength="45" placeholder="Introduzca título del canal." disabled="true" required pattern="[a-zA-Z0-9]*"/>
+                                <input type="text" id="TituloConfCanal" class="form-control" value="${sessionScope.USUARIO.canal.titulo}" size="45" maxlength="45" placeholder="Introduzca título del canal." disabled="true" required pattern="[a-zA-Z0-9]*"/>
                                 <span id="errorTituloConfCanal" class="glyphicon glyphicon-remove text-danger" style="visibility: hidden;"></span>
                                 <button id="btnEditarTitulo" class="btn btn-default" style="margin-left: 1%;">Editar</button>                                
                                 <span id="mensajeErrorTituloConf" class="text-danger" style="margin-left: 3%;"></span>
@@ -80,7 +80,7 @@
                                         </c:choose>" style="height: 100%; width: auto; margin: auto;" />
                                 </div>
                                 <span class="glyphicon glyphicon-remove text-danger" style="visibility: hidden;"></span>
-                                <input type="file" id="btnSubirImagen" name="btnSubirImagen" class="form-control" style="margin-left: 1%;"/>
+                                <input type="file" id="btnAgregarImagen" name="btnAgregarImagen" class="form-control" style="margin-left: 1%;"/>
                             </dd><br/><br/>
                         </form>
                     </dl>

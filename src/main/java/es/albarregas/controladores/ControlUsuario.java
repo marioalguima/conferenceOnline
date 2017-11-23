@@ -104,7 +104,8 @@ public class ControlUsuario extends HttpServlet {
                 break;
             case "modificarDatosCanal":
                 String descripcion = request.getParameter("descripcion");
-                if (modificarCanal(descripcion,request)){
+                String titulo = request.getParameter("titulo");
+                if (modificarCanal(titulo, descripcion, request)) {
                     respuesta = "ok";
                 } else {
                     respuesta = "notok";
@@ -128,11 +129,12 @@ public class ControlUsuario extends HttpServlet {
 
     /**
      * Modifica los datos de la cuenta de un usuario
-     * 
+     *
      * @param email Email a modificar
      * @param password Contraseña a modificar
      * @param request servlet request
-     * @return un boolean con true si se ha podido moficiar y false si ha ocurrido algún error
+     * @return un boolean con true si se ha podido moficiar y false si ha
+     * ocurrido algún error
      */
     private boolean modificarUsuario(String email, String password, HttpServletRequest request) {
         HttpSession sesion = request.getSession(false);
@@ -168,15 +170,16 @@ public class ControlUsuario extends HttpServlet {
         sesion.setAttribute("USUARIO", usuario);
         return true;
     }
-    
+
     /**
      * Modifica los datos del canal
-     * 
+     *
      * @param descripcion Descripcion a modificar
      * @param request servlet request
-     * @return un boolean con true si se ha podido moficiar y false si ha ocurrido algún error
+     * @return un boolean con true si se ha podido moficiar y false si ha
+     * ocurrido algún error
      */
-    private boolean modificarCanal(String descripcion, HttpServletRequest request) {
+    private boolean modificarCanal(String titulo, String descripcion, HttpServletRequest request) {
         HttpSession sesion = request.getSession(false);
         Usuario usuario = null;
         Canal canal = null;
@@ -185,12 +188,13 @@ public class ControlUsuario extends HttpServlet {
             if (usuario != null) {
                 canal = usuario.getCanal();
                 canal.setDescripcion(descripcion);
+                canal.setTitulo(titulo);
             } else {
                 return false;
             }
         } else {
             return false;
-        }        
+        }
         new GenericoDAO().update(canal);
         usuario.setCanal(canal);
         sesion.setAttribute("USUARIO", usuario);
@@ -217,6 +221,7 @@ public class ControlUsuario extends HttpServlet {
 
         Usuario usuario = new Usuario(0, nombre, email, encriptada, 'n');
         Canal canal = new Canal(0, "", "", null, usuario);
+        usuario.setCanal(canal);
         genDao.add(usuario);
         genDao.add(canal);
 
