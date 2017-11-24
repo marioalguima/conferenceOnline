@@ -39,6 +39,12 @@ window.onload = function () {
     if (document.getElementById("btnGuardarCambiosCanal") !== null) {
         document.getElementById("btnGuardarCambiosCanal").onclick = eventoClickGuardarCambiosCanal;
     }
+    if (document.getElementById("btnGuardarImagen") !== null) {
+        document.getElementById("btnGuardarImagen").onclick = eventoClickGuardarImagen;
+    }
+    if (document.getElementById("btnAgregarImagen") !== null) {
+        document.getElementById("btnAgregarImagen").onchange = eventoCambiarFotoPerfil;
+    }
     if (document.getElementById("usuarioRegistro") !== null) {
         document.getElementById("usuarioRegistro").onblur = eventoPerdidaFocoUsuarioRegistro;
     }
@@ -85,6 +91,11 @@ window.onload = function () {
             return false;
         };
     }
+    if (document.getElementById("formSubirImagen") !== null) {
+        document.getElementById("formSubirImagen").onsubmit = function () {
+            return false;
+        };
+    }
 };
 
 function eventoClickRegistro() {
@@ -99,6 +110,31 @@ function eventoClickEntrar() {
     document.getElementById("registro").className = "tab-pane fade";
     document.getElementById("CabInicioSesion").className = "active";
     document.getElementById("CabRegistro").className = "";
+}
+
+function eventoClickGuardarImagen() {
+    var data = new FormData();
+    var input = $('#btnAgregarImagen');
+    //Append files infos
+    $.each(input[0].files, function (i, file) {
+        data.append('file-' + i, file);
+    });
+
+    $.ajax({
+        url: "ControlUsuario?peticion=GuardarImagen",
+        type: "POST",
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
+        context: this,
+        success: function (respuesta) {
+            if (respuesta === "ok") {
+                alert("Imagen subida con éxito, esta operación puede tardar un tiempo antes de que vea los cambios.");
+                location.reload(true);
+            }
+        }
+    });
 }
 
 function eventoClickLogin() {
@@ -118,6 +154,15 @@ function eventoClickLogin() {
                 }
             }
         });
+    }
+}
+
+function eventoCambiarFotoPerfil() {
+    if (this.files[0].size > 100000) {
+        alert('El archivo no debe ser mayor de 100Kb');
+        this.files[0].name = '';
+    } else {
+        document.getElementById("btnGuardarImagen").style = "margin-left: 1%; visibility: visible;";
     }
 }
 
@@ -155,7 +200,7 @@ function eventoClickGuardarCambiosCanal() {
     var datos = null;
     if (descripcion !== descripcionAntiguo && titulo !== tituloAntiguo) {
         datos = {"peticion": "modificarDatosCanal", "titulo": titulo, "descripcion": descripcion};
-    }else if(descripcion !== descripcionAntiguo){
+    } else if (descripcion !== descripcionAntiguo) {
         datos = {"peticion": "modificarDatosCanal", "titulo": tituloAntiguo, "descripcion": descripcion};
     } else {
         datos = {"peticion": "modificarDatosCanal", "titulo": titulo, "descripcion": descripcionAntiguo};
@@ -214,7 +259,7 @@ function eventoCerrarSesion() {
 
 function eventoPerdidaFocoTituloCanal() {
     var titulo = document.getElementById("TituloConfCanal").value;
-    if(titulo === tituloAntiguo){
+    if (titulo === tituloAntiguo) {
         document.getElementById("TituloConfCanal").value;
     } else {
         document.getElementById("btnGuardarCambiosCanal").disabled = false;

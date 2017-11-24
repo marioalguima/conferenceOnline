@@ -6,26 +6,29 @@
 package es.albarregas.controladores;
 
 import es.albarregas.beans.Canal;
+import es.albarregas.beans.Imagen;
 import es.albarregas.beans.Usuario;
 import es.albarregas.dao.GenericoDAO;
 import es.albarregas.utilidades.Util;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author Mario
  */
 @WebServlet(name = "ControlUsuario", urlPatterns = {"/ControlUsuario"})
+@MultipartConfig
 public class ControlUsuario extends HttpServlet {
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -111,7 +114,19 @@ public class ControlUsuario extends HttpServlet {
                     respuesta = "notok";
                 }
                 break;
+            case "GuardarImagen":
+                Part archivo = request.getPart("file-0");
+                usuario = (Usuario) request.getSession(false).getAttribute("USUARIO");
+                String fileName = String.valueOf(usuario.getIdUsuario()).concat("Imagen");
+                String path = request.getSession(true).getServletContext().getRealPath("/img/");
+                path = "C:\\Users\\practica_2\\Documents\\NetBeansProjects\\conferenceOnline\\src\\main\\webapp\\img";
+                String imagen = Util.subirImagen(archivo, fileName, path);
+                if (annadirImagenCanal(imagen, request)) {
+                    respuesta = "ok";
+                }
+                break;
         }
+
         if (!respuesta.isEmpty()) {
             response.getWriter().append(respuesta);
         }
@@ -198,6 +213,31 @@ public class ControlUsuario extends HttpServlet {
         new GenericoDAO().update(canal);
         usuario.setCanal(canal);
         sesion.setAttribute("USUARIO", usuario);
+        return true;
+    }
+
+    private boolean annadirImagenCanal(String imagen, HttpServletRequest request) {
+        GenericoDAO genDao = new GenericoDAO();
+        Imagen aSubir;
+        Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+        Canal canal = usuario.getCanal();
+
+        if (canal.getImgUsuario() == null) {
+            aSubir = new Imagen(0, imagen);
+            genDao.add(aSubir);
+        } else {
+            aSubir = canal.getImgUsuario();
+            aSubir.setImagen(imagen);
+            genDao.update(aSubir);
+        }
+
+        canal.setImgUsuario(aSubir);
+        usuario.setCanal(canal);
+
+        genDao.update(canal);
+
+        request.getSession().setAttribute("USUARIO", usuario);
+
         return true;
     }
 

@@ -1,22 +1,25 @@
 <%-- 
     Document   : configuracionCuenta
     Created on : 22-nov-2017, 8:54:35
-    Author     : practica_2
+    Author     : Mario
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:include page="cabecera.jsp"/>
-<div class="container-fluid" style="margin-top: 1%; margin: 0; padding: 0;">
-    <div class="col-md-2"></div>
-    <div class="col-sm-12 col-md-10" style="margin: 0; padding: 0;">
-        <div class="panel panel-danger" style="border-radius: 0; margin: 0; padding: 0; border: 0;">
-            <div class="panel-heading" style="padding-left: 5%; background-color: #d94442; border-radius: 0;">
-                <h1 style="color: #111;">Configuraci&oacute;n</h1>
-            </div>
-            <div class="panel-body" style="background-color: #f2dede;">
-                <h3 style="padding-left: 7%;">Configuraci&oacute;n de cuenta</h3>         
-                <div class="container-fluid" style="padding-left: 10%;"><br/><br/>
+
+<div class="col-md-2" style="margin: 0; padding: 0; height: 100%; border-right: 1px solid white;">
+    <jsp:include page="panelIzquierdo.jsp"/>
+</div>
+<div class="col-sm-12 col-md-10" style="margin: 0; padding: 0; height: 100%;">
+    <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
+        <div class="panel-heading" style="padding-left: 5%; background-color: #d94442; border-radius: 0;">
+            <h1 style="color: #111;">Configuraci&oacute;n</h1>
+        </div>
+        <div class="panel-body" style="background-color: #f2dede; height: 100%; padding-top: 5%;">
+            <div class="col-sm-6">
+                <h3 style="padding-left: 1%; margin-bottom: 3%;">Configuraci&oacute;n de cuenta</h3>         
+                <div class="container-fluid" style="padding-left: 0;"><br/><br/>
                     <form id="formConfCuenta" class="form-inline">
                         <dl class="dl-horizontal">
                             <dt>Nombre: </dt>
@@ -44,10 +47,11 @@
                             <dt></dt><dd><button id="btnGuardarCambios" class="btn btn-danger" disabled="true">Guardar cambios</button></dd><br/>                                
                         </dl>
                     </form>                                    
-                </div>                    
-                <p style="border-bottom: 1px solid #c0abab; padding: 0; margin-left: 5%; margin-right: 10%; margin-bottom: 3%;"></p>
-                <h3 style="padding-left: 7%;">Configuraci&oacute;n de canal</h3>
-                <div class="container-fluid" style="padding-left: 10%;"><br/><br/>
+                </div>
+            </div>
+            <div class="col-sm-6" style="border-left: 1px solid black;">
+                <h3 style="padding-left: 1%; margin-bottom: 3%;">Configuraci&oacute;n de canal</h3>
+                <div class="container-fluid" style="padding-left: 0;"><br/><br/>
 
                     <dl class="dl-horizontal">
                         <form id="formConfCanal" class="form-inline">
@@ -60,31 +64,34 @@
                             <dt>Descripci&oacute;n: </dt>
                             <dd>
                                 <textarea class="form-control" rows="3" cols="47" id="desModCanal" name="desModCanal" style="resize: none;" disabled="true" placeholder="Introduzca una descripción del canal.">${sessionScope.USUARIO.canal.descripcion}</textarea>
-                                    <span class="glyphicon glyphicon-remove text-danger" style="visibility: hidden;"></span>
-                                    <button id="editarDescripcion" class="btn btn-default" style="margin-left: 1%;">Editar</button>
-                                </dd><br/><br/>
-                                <dt></dt><dd><button id="btnGuardarCambiosCanal" class="btn btn-danger" disabled="true">Guardar cambios</button></dd><br/><br/><br/>
-                            </form>
-                            <form id="imgAvatar" class="form-inline" method="POST" action="" enctype="multipart/form-data">
-                                <dt>Avatar: </dt>
-                                <dd>
-                                    <div class="col-sm-4" style="width: 150px; height: 150px; background-color: white; padding: 0.5%; border: solid 2px #d94442;">
-                                        <img class="img-responsive" type="image" src="
-                                        <c:choose>
-                                            <c:when test="${sessionScope.USUARIO.getCanal().getImgUsuario() == null}">
-                                                ${sessionScope.path}/img/logotipo_min.png
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${sessionScope.USUARIO.getCanal().getImgUsuario().getImagen()}
-                                            </c:otherwise>
-                                        </c:choose>" style="height: 100%; width: auto; margin: auto;" />
+                                <span class="glyphicon glyphicon-remove text-danger" style="visibility: hidden;"></span>
+                                <button id="editarDescripcion" class="btn btn-default" style="margin-left: 1%;">Editar</button>
+                            </dd><br/><br/>
+                            <dt></dt><dd><button id="btnGuardarCambiosCanal" class="btn btn-danger" disabled="true">Guardar cambios</button></dd><br/><br/><br/>
+                        </form>
+                        <form id="formSubirImagen" class="form-inline" enctype="multipart/form-data">
+                            <dt>Avatar: </dt>
+                            <dd>
+                                <div class="col-sm-4" style="width: 130px; height: 130px; background-color: white; padding: 0.5%; border: solid 2px #d94442;">
+                                    <img class="img-responsive" type="image" src="
+                                         <c:choose>
+                                             <c:when test="${sessionScope.USUARIO.getCanal().getImgUsuario() == null}">
+                                                 ${sessionScope.path}/img/logotipo_min.png
+                                             </c:when>
+                                             <c:otherwise>
+                                                 ${sessionScope.path}/img/${sessionScope.USUARIO.getCanal().getImgUsuario().getImagen()}
+                                             </c:otherwise>
+                                         </c:choose>" style="height: 100%; width: auto; margin: auto;" />
                                 </div>
                                 <span class="glyphicon glyphicon-remove text-danger" style="visibility: hidden;"></span>
-                                <input type="file" id="btnAgregarImagen" name="btnAgregarImagen" class="form-control" style="margin-left: 1%;"/>
-                            </dd><br/><br/>
+                                <div>
+                                    <input type="file" id="btnAgregarImagen" name="btnAgregarImagen" class="form-control" style="margin-left: 1%;" accept="image/png, imagen/jpg, image/jpeg"/><br/><br/>
+                                    <button id="btnGuardarImagen" value="GuardarImagen" class="btn btn-danger" onclick="return false;" style="margin-left: 1%; visibility: hidden;">Guardar Imagen</button>
+                                </div>
+                            </dd>
                         </form>
                     </dl>
-                </div><br/>
+                </div>
             </div>
         </div>
     </div>
