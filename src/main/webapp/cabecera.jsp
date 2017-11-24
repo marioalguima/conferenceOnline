@@ -2,7 +2,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="path" value="${pageContext.request.contextPath}" scope="session"/>
 <!DOCTYPE html>
-<html>
+<html style="height: 100%;">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="author" content="Mario Alberto Guisado Mateos" />
@@ -14,9 +14,10 @@
         <link rel="stylesheet" type="text/css" href="${sessionScope.path}/css/bootstrap.css" />
         <script src="${sessionScope.path}/js/jquery-3.1.1.min.js"></script>
         <script src="${sessionScope.path}/js/bootstrap.min.js"></script>
+        <script src="${sessionScope.path}/js/eventosCabecera.js"></script>
         <script src="${sessionScope.path}/js/eventos.js"></script>
     </head>
-    <body class="container-fluid" style="padding-left: 0; padding-right: 0;">
+    <body class="container-fluid" style="padding-left: 0; padding-right: 0; width: 100%; height: 100%;">
 
         <!-- MODAL DE REGISTRO Y LOGIN DE USUARIOS -->
         <c:if test="${sessionScope.USUARIO==null}">
@@ -105,9 +106,9 @@
             </div>
         </c:if>
         <!-- HEADER COMUN A TODAS LAS PÁGINAS -->
-        <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 1%; margin: 0; border-bottom: 0;">
+        <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 1%; margin: 0;">
             <div class="col-xs-12 col-md-3">
-                <a href="${sessionScope.path}"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" class="img-responsive" style="margin-left: 30%; max-width: 50%"/></a>
+                <a href="${sessionScope.path}"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" class="img-responsive" style="margin-left: 30%; max-width: 50%;"/></a>
             </div>
             <div class="col-xs-12 col-md-9" style="margin-top: 2%;">
                 <div class="col-xs-12 col-md-7">
@@ -146,3 +147,4 @@
                 </div>
             </div>   
         </header>
+        <div class="container-fluid" style="margin-top: 1%; margin: 0; padding: 0; height: 75%;">
