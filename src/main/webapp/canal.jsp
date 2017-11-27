@@ -20,15 +20,63 @@
             </c:otherwise>
         </c:choose>
         <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
-            <div class="panel-heading" style="padding-left: 5%; background-color: #d94442; border-radius: 0;">
-                <h1 style="color: #111;">
-                    <c:if test="${requestScope.CANAL == null}">
-                        <c:if test="${sessionScope.USUARIO.canal.titulo != null}">
-                            ${sessionScope.USUARIO.canal.titulo}
-                        </c:if>
-                        
-                        </c:if>
-                </h1>
+            <div class="panel-heading row" style="margin: 0; padding-left: 5%; background-color: #d94442; border-radius: 0;">
+                <div class="col-md-1">
+                    <div style="width: 65px; height: 65px; background-color: white; padding: 0; border: solid 1px #ffffff;">
+                        <img class="img-responsive" type="image" src="
+                             <c:choose>
+                                 <c:when test="${requestScope.CANAL == null}">
+                                     <c:choose>
+                                         <c:when test="${sessionScope.USUARIO.getCanal().getImgUsuario() == null}">
+                                             ${sessionScope.path}/img/logotipo_min.png
+                                         </c:when>
+                                         <c:otherwise>
+                                             ${sessionScope.path}/img/${sessionScope.USUARIO.getCanal().getImgUsuario().getImagen()}
+                                         </c:otherwise>
+                                     </c:choose>
+                                 </c:when>
+                                 <c:when test="${requestScope.CANAL != null}">
+                                     <c:choose>
+                                         <c:when test="${requestScope.CANAL.getCanal().getImgUsuario() == null}">
+                                             ${sessionScope.path}/img/logotipo_min.png
+                                         </c:when>
+                                         <c:otherwise>
+                                             ${sessionScope.path}/img/${requestScope.CANAL.getCanal().getImgUsuario().getImagen()}
+                                         </c:otherwise>
+                                     </c:choose>
+                                 </c:when>
+                             </c:choose>" style="height: 100%; width: auto; margin: auto;" />
+                    </div>
+                </div>
+                <c:choose>
+                    <c:when test="${requestScope.CANAL == null}">
+                        <c:choose>                            
+                            <c:when test="${!sessionScope.USUARIO.canal.titulo.isEmpty()}">
+                                <h1 class="col-md-9" style="color: #111;">${sessionScope.USUARIO.canal.titulo}</h1>
+                            </c:when>
+                            <c:when test="${sessionScope.USUARIO.canal.titulo.isEmpty()}">
+                                <h1 class="col-md-9" style="color: #111;">Canal de ${sessionScope.USUARIO.nombre}</h1>
+                            </c:when>
+                        </c:choose>
+                    </c:when>
+                    <c:when test="${requestScope.CANAL != null}">  
+                        <c:choose>                            
+                            <c:when test="${!requestScope.CANAL.canal.titulo.isEmpty()}">
+                                <h1 class="col-md-9" style="color: #111;">${requestScope.CANAL.canal.titulo}</h1>
+                            </c:when>
+                            <c:when test="${requestScope.CANAL.canal.titulo.isEmpty()}">
+                                <h1 class="col-md-9" style="color: #111;">Canal de ${requestScope.CANAL.nombre}</h1>
+                            </c:when>
+                        </c:choose>
+                    </c:when>
+                </c:choose>
+                <c:if test="${sessionScope.USUARIO != null && requestScope.CANAL != null && sessionScope.USUARIO.nombre != requestScope.CANAL.nombre}">
+                    <h4 class="col-md-2 text-right" style="padding-right: 3%; margin: 0; margin-top: 2%; color: #ffffff;">
+                        Suscrito:
+                        <input type="checkbox" data-toggle="toggle" data-on="Sí" data-off="No" data-size="mini"/>
+                    </h4>    
+                </c:if>
+
             </div>
             <div class="panel-body" style="background-color: #f2dede; height: 100%; padding-top: 5%;">
 

@@ -34,6 +34,7 @@ public class ControlPeticion extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        doPost(request, response);
     }
 
     /**
@@ -50,15 +51,26 @@ public class ControlPeticion extends HttpServlet {
         String respuesta = "";
         Usuario usuario; // Variable para almacenar el usuario que pidan
         ArrayList<Usuario> usuarios;
+        String nombreUsuario;
         switch (request.getParameter("peticion")) {
             case "buscarUsuario":
-                String nombreUsuario = request.getParameter("nombre");
-                if(nombreUsuario != null){
-                    usuarios = buscarUsuarios(nombreUsuario);
-                    if(usuarios.isEmpty()){
-                       respuesta = "notok"; 
-                    }else{  
-                        respuesta = Util.parseUsuarios(usuarios);                        
+                nombreUsuario = request.getParameter("nombre");
+                if (nombreUsuario != null) {
+                    usuarios = buscarUsuarios(nombreUsuario, request);
+                    if (usuarios.isEmpty()) {
+                        respuesta = "notok";
+                    } else {
+                        respuesta = Util.parseUsuarios(usuarios);
+                    }
+                }
+                break;
+            case "canal":
+                nombreUsuario = request.getParameter("nombre");
+                if (nombreUsuario != null) {
+                    usuarios = buscarUsuarios(nombreUsuario, request);
+                    if (!usuarios.isEmpty()) {
+                        request.setAttribute("CANAL", usuarios.get(0));
+                        request.getRequestDispatcher("canal.jsp").forward(request, response);
                     }
                 }
                 break;
@@ -66,12 +78,18 @@ public class ControlPeticion extends HttpServlet {
         if (!respuesta.isEmpty()) {
             response.getWriter().append(respuesta);
         }
-        
+
     }
-    
-    private ArrayList<Usuario> buscarUsuarios(String nombre){
+
+    private ArrayList<Usuario> buscarUsuarios(String nombre, HttpServletRequest request) {
+        Usuario usuarioActivo = (Usuario) request.getSession(false).getAttribute("USUARIO");
+        String consulta = "Usuario where upper(nombre) like '" + nombre.toUpperCase() + "%' and tipo = 'n'";
+        if (usuarioActivo != null) {
+            String nombreUsuario = usuarioActivo.getNombre();
+            consulta = consulta.concat(" and nombre != '" + nombreUsuario + "'");
+        }
         GenericoDAO genDao = new GenericoDAO();
-        ArrayList<Usuario> usuarios = (ArrayList)genDao.get("Usuario where upper(nombre) like '"+nombre.toUpperCase()+"%'");
+        ArrayList<Usuario> usuarios = (ArrayList) genDao.get(consulta);
         return usuarios;
     }
 

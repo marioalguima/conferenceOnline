@@ -46,7 +46,7 @@ window.onload = function () {
         document.getElementById("btnAgregarImagen").onchange = eventoCambiarFotoPerfil;
     }
     if (document.getElementById("buscarUsuarios") !== null) {
-        document.getElementById("buscarUsuarios").onkeypress = eventoCambiarBusquedaUsuario;
+        document.getElementById("buscarUsuarios").onkeyup = eventoCambiarBusquedaUsuario;
     }
     if (document.getElementById("buscarUsuarios") !== null) {
         document.getElementById("buscarUsuarios").onblur = eventoPerdidaBusquedaUsuario;
@@ -109,10 +109,11 @@ function eventoPerdidaBusquedaUsuario() {
 }
 
 function eventoCambiarBusquedaUsuario() {
+    document.getElementById("resultadoBusqueda").innerHTML = "";
+    document.getElementById("resultadoBusqueda").style.display = "none";
     var nombreUsuario = document.getElementById("buscarUsuarios").value;
     nombreUsuario = nombreUsuario.trim();
-    if (nombreUsuario.length >= 2) {
-    document.getElementById("resultadoBusqueda").innerHTML = "";
+    if (nombreUsuario.length >= 3) {
         $.ajax({
             url: "ControlPeticion",
             type: "POST",
@@ -120,8 +121,8 @@ function eventoCambiarBusquedaUsuario() {
             success: function (respuesta) {
                 if (respuesta !== "notok") {
                     var json = JSON.parse(respuesta);
-                    for(var i in json.objeto){
-                        document.getElementById("resultadoBusqueda").innerHTML += "<li><a href=\"canal.jsp\"><img src=\"img/"+json.objeto[i].imagen+"\" style=\"height: 25px; width: 25px; margin: 10%; margin-left: 0;\"/>"+json.objeto[i].nombre+"</a></li>";
+                    for (var i in json.objeto) {
+                        document.getElementById("resultadoBusqueda").innerHTML += "<li><a href=\"ControlPeticion?peticion=canal&nombre=" + json.objeto[i].nombre + "\"><img src=\"img/" + json.objeto[i].imagen + "\" style=\"height: 25px; width: 25px; margin: 10%; margin-left: 0;\"/>" + json.objeto[i].nombre + "</a></li>";
                     }
                     $("#resultadoBusqueda").slideDown();
                 }

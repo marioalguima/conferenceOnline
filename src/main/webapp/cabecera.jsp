@@ -15,6 +15,8 @@
         <script src="${sessionScope.path}/js/jquery-3.1.1.min.js"></script>
         <script src="${sessionScope.path}/js/bootstrap.min.js"></script>
         <script src="${sessionScope.path}/js/eventos.js"></script>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     </head>
     <body class="container-fluid" style="padding-left: 0; padding-right: 0; width: 100%; height: 100%;">
 
@@ -107,13 +109,13 @@
         <!-- HEADER COMUN A TODAS LAS PÁGINAS -->
         <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 1%; margin: 0;">
             <div class="col-xs-12 col-md-3">
-                <a href="${sessionScope.path}"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" class="img-responsive" style="margin-left: 30%; max-width: 50%;"/></a>
+                <a href="${sessionScope.path}/index.jsp"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" class="img-responsive" style="margin-left: 30%; max-width: 50%;"/></a>
             </div>
             <div class="col-xs-12 col-md-9" style="margin-top: 2%;">
                 <div class="col-xs-12 col-md-7">
-                    <form id="formBusqueda">
+                    <form id="formBusqueda" method="post">
                         <div class="form-group" style="margin-right: 0; padding-right: 0;">
-                            <input id="buscarUsuarios" type="text" class="form-control" name="nombre" placeholder="Buscar" style="border-radius: 0;"/>
+                            <input id="buscarUsuarios" type="text" class="form-control" name="nombre" placeholder="Buscar" style="border-radius: 0;" autocomplete="off"/>
                             <input type="hidden" name="peticion" value="buscarUsuario"/>
                         </div>                        
                     </form>
@@ -135,10 +137,10 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">Mi canal</a></li>
+                                    <li><a href="${sessionScope.path}/canal.jsp">Mi canal</a></li>
                                     <li><a href="${sessionScope.path}/configuracionCuenta.jsp">Configurar datos de cuenta</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="${sessionScope.path}/index.jsp" id="menuCerrarSesion">Cerrar sesi&oacute;n</a></li>
+                                    <li><a href="index.jsp" onclick="return false;" id="menuCerrarSesion">Cerrar sesi&oacute;n</a></li>
                                 </ul>
                             </div>
                         </c:when>                            
