@@ -45,6 +45,12 @@ window.onload = function () {
     if (document.getElementById("btnAgregarImagen") !== null) {
         document.getElementById("btnAgregarImagen").onchange = eventoCambiarFotoPerfil;
     }
+    if (document.getElementById("buscarUsuarios") !== null) {
+        document.getElementById("buscarUsuarios").onkeypress = eventoCambiarBusquedaUsuario;
+    }
+    if (document.getElementById("buscarUsuarios") !== null) {
+        document.getElementById("buscarUsuarios").onblur = eventoPerdidaBusquedaUsuario;
+    }
     if (document.getElementById("usuarioRegistro") !== null) {
         document.getElementById("usuarioRegistro").onblur = eventoPerdidaFocoUsuarioRegistro;
     }
@@ -97,6 +103,32 @@ window.onload = function () {
         };
     }
 };
+
+function eventoPerdidaBusquedaUsuario() {
+    $("#resultadoBusqueda").slideUp();
+}
+
+function eventoCambiarBusquedaUsuario() {
+    var nombreUsuario = document.getElementById("buscarUsuarios").value;
+    nombreUsuario = nombreUsuario.trim();
+    if (nombreUsuario.length >= 2) {
+    document.getElementById("resultadoBusqueda").innerHTML = "";
+        $.ajax({
+            url: "ControlPeticion",
+            type: "POST",
+            data: {"peticion": "buscarUsuario", "nombre": nombreUsuario},
+            success: function (respuesta) {
+                if (respuesta !== "notok") {
+                    var json = JSON.parse(respuesta);
+                    for(var i in json.objeto){
+                        document.getElementById("resultadoBusqueda").innerHTML += "<li><a href=\"canal.jsp\"><img src=\"img/"+json.objeto[i].imagen+"\" style=\"height: 25px; width: 25px; margin: 10%; margin-left: 0;\"/>"+json.objeto[i].nombre+"</a></li>";
+                    }
+                    $("#resultadoBusqueda").slideDown();
+                }
+            }
+        });
+    }
+}
 
 function eventoClickRegistro() {
     document.getElementById("inicioSesion").className = "tab-pane fade";
@@ -260,7 +292,7 @@ function eventoCerrarSesion() {
 function eventoPerdidaFocoTituloCanal() {
     var titulo = document.getElementById("TituloConfCanal").value;
     if (titulo === tituloAntiguo) {
-        document.getElementById("TituloConfCanal").value;
+        document.getElementById("TituloConfCanal").disabled = true;
     } else {
         document.getElementById("btnGuardarCambiosCanal").disabled = false;
     }
@@ -277,6 +309,7 @@ function eventoPerdidaFocoDescripcionCanal() {
 
 function eventoPerdidaFocoEmailConfCuenta() {
     var email = document.getElementById("emailConfCuenta").value;
+    email = email.trim();
     if (email === emailAntiguo) {
         document.getElementById("emailConfCuenta").disabled = true;
         document.getElementById("errorEmailConfCuenta").style = "visibility: hidden";
@@ -316,6 +349,7 @@ function eventoPerdidaFocoEmailConfCuenta() {
 
 function eventoPerdidaFocoPasswordConfCuenta() {
     var password = document.getElementById("passwordConfCuenta").value;
+    password = password.trim();
     if (password === passwordAntiguo) {
         document.getElementById("repetidaBloque").style = "display: none";
         document.getElementById("passwordConfCuenta").disabled = true;
@@ -355,6 +389,7 @@ function eventoPerdidaFocoRepetidaConfCuenta() {
 
 function eventoPerdidaFocoUsuarioRegistro() {
     var nombreUsuario = document.getElementById("usuarioRegistro").value;
+    nombreUsuario = nombreUsuario.trim();
     if (nombreUsuario.length >= 3) {
         $.ajax({
             url: "ControlUsuario",
@@ -369,7 +404,7 @@ function eventoPerdidaFocoUsuarioRegistro() {
                 } else {
                     document.getElementById("errorNombreRegistro").className = "glyphicon glyphicon-remove text-danger col-sm-1";
                     document.getElementById("errorNombreRegistro").style = "visibility: visible";
-                    document.getElementById("errorRegistro").innerHTML = "Ese nombre está en uso, elija otro nombre.";
+                    document.getElementById("errorRegistro").innerHTML = "El nombre está en uso, elija otro nombre.";
                     document.getElementById("btnRegistrarse").disabled = true;
                 }
             }
@@ -381,6 +416,7 @@ function eventoPerdidaFocoUsuarioRegistro() {
 
 function eventoPerdidaFocoEmailRegistro() {
     var email = document.getElementById("emailRegistro").value;
+    email = email.trim();
     if (email.length >= 8 && /[a-zA-Z0-9_.]+@[a-zA-Z0-9]+[.][a-zA-Z]{1,5}/.test(email)) {
         $.ajax({
             url: "ControlUsuario",
@@ -395,7 +431,7 @@ function eventoPerdidaFocoEmailRegistro() {
                 } else {
                     document.getElementById("errorEmailRegistro").className = "glyphicon glyphicon-remove text-danger col-sm-1";
                     document.getElementById("errorEmailRegistro").style = "visibility: visible";
-                    document.getElementById("errorRegistro").innerHTML = "Ese email está en uso, utilice otro email.";
+                    document.getElementById("errorRegistro").innerHTML = "El email está en uso, utilice otro email.";
                     document.getElementById("btnRegistrarse").disabled = true;
                 }
             }
@@ -407,6 +443,7 @@ function eventoPerdidaFocoEmailRegistro() {
 
 function eventoPerdidaFocoPasswordRegistro() {
     var password = document.getElementById("passwordRegistro").value;
+    password = password.trim();
     if (password.length >= 3) {
         document.getElementById("passwordRepetida").disabled = false;
     } else {

@@ -5,6 +5,7 @@
  */
 package es.albarregas.utilidades;
 
+import es.albarregas.beans.Usuario;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -12,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import javax.servlet.http.Part;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
@@ -49,6 +51,20 @@ public class Util {
 
         return file.getFileName().toString();
 
+    }
+    
+    public static String parseUsuarios(ArrayList<Usuario> usuarios) {
+        String cadena = "{\"objeto\":[";
+        for(Usuario u: usuarios){
+            if(u.getCanal().getImgUsuario() != null){
+                cadena = cadena.concat("{\"nombre\": \""+u.getNombre()+"\", \"imagen\": \""+u.getCanal().getImgUsuario().getImagen()+"\"},");
+            }else{
+                cadena = cadena.concat("{\"nombre\": \""+u.getNombre()+"\", \"imagen\": \"logotipo_min.png\"},");
+            }
+        }        
+        cadena = cadena.substring(0, cadena.length()-1);
+        cadena = cadena.concat("]}");
+        return cadena;
     }
 
 }

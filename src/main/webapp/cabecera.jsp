@@ -14,7 +14,6 @@
         <link rel="stylesheet" type="text/css" href="${sessionScope.path}/css/bootstrap.css" />
         <script src="${sessionScope.path}/js/jquery-3.1.1.min.js"></script>
         <script src="${sessionScope.path}/js/bootstrap.min.js"></script>
-        <script src="${sessionScope.path}/js/eventosCabecera.js"></script>
         <script src="${sessionScope.path}/js/eventos.js"></script>
     </head>
     <body class="container-fluid" style="padding-left: 0; padding-right: 0; width: 100%; height: 100%;">
@@ -112,14 +111,14 @@
             </div>
             <div class="col-xs-12 col-md-9" style="margin-top: 2%;">
                 <div class="col-xs-12 col-md-7">
-                    <form action="${sessionScope.path}/" method="post">
-                        <div class="form-group col-xs-11 col-sm-11 col-md-11 col-lg-11" style="margin-right: 0; padding-right: 0;">
-                            <input type="text" class="form-control" name="nombre" placeholder="Buscar" style="border-radius: 0;"/>
-                        </div>
-                        <button type="submit" class="btn btn-default col-xs-1" name="buscar" style="border-radius: 0; margin-left: 0; padding-left: 0; padding-right: 0; border-left: 0;">
-                            <span class="glyphicon glyphicon-search" style="margin: 0; padding: 0;"></span>
-                        </button>
+                    <form id="formBusqueda">
+                        <div class="form-group" style="margin-right: 0; padding-right: 0;">
+                            <input id="buscarUsuarios" type="text" class="form-control" name="nombre" placeholder="Buscar" style="border-radius: 0;"/>
+                            <input type="hidden" name="peticion" value="buscarUsuario"/>
+                        </div>                        
                     </form>
+                    <ul id="resultadoBusqueda" class="dropdown-menu" style="margin-left: 2%;">
+                    </ul>
                 </div>
                 <div class="col-xs-6 col-md-5" style="padding-left: 15%;">
                     <c:choose>
