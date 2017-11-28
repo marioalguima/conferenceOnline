@@ -21,7 +21,7 @@
 </c:choose>
     <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
         <div class="panel-heading" style="padding-left: 5%; background-color: #d94442; border-radius: 0;">
-            <h1 style="color: #111;">Actualmente en directo</h1>
+            <h2 style="color: #111;">Actualmente en directo</h2>
         </div>
         <div class="panel-body" style="background-color: #f2dede; height: 100%; padding-top: 5%;">
         

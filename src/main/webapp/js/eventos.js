@@ -41,6 +41,9 @@ window.onload = function () {
     }
     if (document.getElementById("btnGuardarImagen") !== null) {
         document.getElementById("btnGuardarImagen").onclick = eventoClickGuardarImagen;
+    }    
+    if (document.getElementById("cheqSuscrito") !== null) {
+        document.getElementById("cheqSuscrito").onchange = eventoClickSuscribirse;
     }
     if (document.getElementById("btnAgregarImagen") !== null) {
         document.getElementById("btnAgregarImagen").onchange = eventoCambiarFotoPerfil;
@@ -103,6 +106,25 @@ window.onload = function () {
         };
     }
 };
+
+function eventoClickSuscribirse() {
+    var data = "";
+    if(document.getElementById("cheqSuscrito").checked){
+        data = {"peticion": "suscribirse", "idUsuario": document.getElementById("idUsuarioSeguir").value};
+    } else {
+        data = {"peticion": "quitarSuscripcion", "idUsuario": document.getElementById("idUsuarioSeguir").value};
+    }
+    $.ajax({
+        url: "ControlPeticion",
+        type: "POST",
+        data: data,
+        success: function (respuesta) {
+            if(respuesta === "ok"){
+                location.reload();
+            }
+        }
+    });
+}
 
 function eventoPerdidaBusquedaUsuario() {
     $("#resultadoBusqueda").slideUp();
@@ -183,7 +205,7 @@ function eventoClickLogin() {
                     document.getElementById("errorLogin").innerHTML = "Nombre de usuario o contraseña incorrectos";
                 } else {
                     document.getElementById("errorLogin").innerHTML = "";
-                    location.reload(true);
+                    location.href = "index.jsp";
                 }
             }
         });

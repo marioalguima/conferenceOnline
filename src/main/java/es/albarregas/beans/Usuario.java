@@ -6,6 +6,7 @@
 package es.albarregas.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -37,6 +38,9 @@ public class Usuario implements Serializable {
     @OneToOne(cascade = CascadeType.MERGE)
     @PrimaryKeyJoinColumn
     private Canal canal;
+    
+    @Transient
+    private ArrayList<Usuario> suscripciones = new ArrayList();
     
     public Usuario(){
         
@@ -133,5 +137,19 @@ public class Usuario implements Serializable {
     public void setCanal(Canal canal) {
         this.canal = canal;
     }
-    
+
+    /**
+     * @return the suscripciones
+     */
+    public ArrayList<Usuario> getSuscripciones() {
+        return suscripciones;
+    }
+
+    /**
+     * @param suscripciones the suscripciones to set
+     */
+    public void setSuscripciones(ArrayList<Usuario> suscripciones) {
+        this.suscripciones = suscripciones;
+    }
+        
 }

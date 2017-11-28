@@ -7,6 +7,7 @@ package es.albarregas.controladores;
 
 import es.albarregas.beans.Canal;
 import es.albarregas.beans.Imagen;
+import es.albarregas.beans.Suscripcion;
 import es.albarregas.beans.Usuario;
 import es.albarregas.dao.GenericoDAO;
 import es.albarregas.utilidades.Util;
@@ -119,7 +120,7 @@ public class ControlUsuario extends HttpServlet {
                 usuario = (Usuario) request.getSession(false).getAttribute("USUARIO");
                 String fileName = String.valueOf(usuario.getIdUsuario()).concat("Imagen");
                 String path = request.getSession(true).getServletContext().getRealPath("/img/");
-                path = "C:\\Users\\Mario\\Documents\\NetBeansProjects\\conferenceOnline\\src\\main\\webapp\\img";
+                path = "C:\\Users\\practica_2\\Documents\\NetBeansProjects\\conferenceOnline\\src\\main\\webapp\\img";
                 String imagen = Util.subirImagen(archivo, fileName, path);
                 if (annadirImagenCanal(imagen, request)) {
                     respuesta = "ok";
@@ -276,17 +277,27 @@ public class ControlUsuario extends HttpServlet {
      * @return Usuario que se ha logueado
      */
     private Usuario iniciarSesion(String nombre, String password) {
+        GenericoDAO genDAO = new GenericoDAO();
         String encriptada = "";
         Usuario usuario = null;
+        ArrayList<Suscripcion> suscripciones;
         ArrayList<Usuario> usuarios;
         try {
             encriptada = Util.encriptarMD5(password);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
-        usuarios = (ArrayList) new GenericoDAO().get("Usuario where nombre='" + nombre + "' and password='" + encriptada + "' and tipo!='b'");
+        usuarios = (ArrayList) genDAO.get("Usuario where nombre='" + nombre + "' and password='" + encriptada + "' and tipo!='b'");
         if (!usuarios.isEmpty()) {
             usuario = usuarios.get(0);
+            suscripciones = (ArrayList) genDAO.get("Suscripcion where suscriptor='" + usuario.getIdUsuario() + "'");
+            if (suscripciones != null) {
+                Usuario usAux;
+                for (Suscripcion s : suscripciones) {
+                    usAux = (Usuario)genDAO.get("Usuario where idUsuario='" + s.getUsuarioSeguir() + "'").get(0);
+                    usuario.getSuscripciones().add(usAux);
+                }
+            }
         }
         return usuario;
     }

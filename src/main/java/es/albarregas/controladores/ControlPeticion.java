@@ -5,6 +5,7 @@
  */
 package es.albarregas.controladores;
 
+import es.albarregas.beans.Suscripcion;
 import es.albarregas.beans.Usuario;
 import es.albarregas.dao.GenericoDAO;
 import es.albarregas.utilidades.Util;
@@ -74,11 +75,46 @@ public class ControlPeticion extends HttpServlet {
                     }
                 }
                 break;
+            case "suscribirse":
+                suscribirse(Integer.parseInt(request.getParameter("idUsuario")), request);
+                respuesta = "ok";
+                break;
+            case "quitarSuscripcion":
+                eliminarSuscripcion(Integer.parseInt(request.getParameter("idUsuario")), request);
+                respuesta = "ok";
+                break;
         }
         if (!respuesta.isEmpty()) {
             response.getWriter().append(respuesta);
         }
 
+    }
+    
+    private void suscribirse(int idUsuarioSeguir, HttpServletRequest request){        
+        Suscripcion suscripcion;
+        GenericoDAO genDao = new GenericoDAO();
+        Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+        suscripcion = new Suscripcion(0, usuario.getIdUsuario(), idUsuarioSeguir);
+        genDao.add(suscripcion);
+        usuario.getSuscripciones().add((Usuario)genDao.get("Usuario where idUsuario='"+idUsuarioSeguir+"'").get(0));
+        request.getSession().setAttribute("USUARIO", usuario);
+    }
+    
+    private void eliminarSuscripcion(int idUsuarioSeguir, HttpServletRequest request){
+        Suscripcion suscripcion;
+        GenericoDAO genDao = new GenericoDAO();
+        Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
+        ArrayList<Suscripcion> suscripciones = (ArrayList) genDao.get("Suscripcion where suscriptor='"+usuario.getIdUsuario()+"' and usuarioSeguir='"+idUsuarioSeguir+"'");
+        if(suscripciones != null && !suscripciones.isEmpty()){
+            suscripcion = suscripciones.get(0);
+            genDao.delete(suscripcion);
+            for(int i = 0; i<usuario.getSuscripciones().size(); i++){ 
+                if(usuario.getSuscripciones().get(i).getIdUsuario() == suscripcion.getUsuarioSeguir()){
+                    usuario.getSuscripciones().remove(i);                  
+                }
+            }
+        }
+        request.getSession().setAttribute("USUARIO", usuario);
     }
 
     private ArrayList<Usuario> buscarUsuarios(String nombre, HttpServletRequest request) {
