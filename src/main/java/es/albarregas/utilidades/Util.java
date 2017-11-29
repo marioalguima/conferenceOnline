@@ -36,7 +36,7 @@ public class Util {
 
         String filename = FilenameUtils.getBaseName(nombre);
 
-        String extension = FilenameUtils.getExtension(".jpg");
+        String extension = FilenameUtils.getExtension(".gif");
 
         Path fichero = Paths.get(direccion + System.getProperty("file.separator") + filename + "." + extension);
         

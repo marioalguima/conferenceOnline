@@ -260,7 +260,7 @@ public class ControlUsuario extends HttpServlet {
             System.err.println(e.getMessage());
         }
 
-        Usuario usuario = new Usuario(0, nombre, email, encriptada, 'n');
+        Usuario usuario = new Usuario(0, nombre, email, encriptada, "n");
         Canal canal = new Canal(0, "", "", null, usuario);
         usuario.setCanal(canal);
         genDao.add(usuario);

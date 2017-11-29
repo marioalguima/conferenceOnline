@@ -44,7 +44,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-12" for="usuarioLogin">Usuario</label>
                                                 <div class="col-sm-11">
-                                                    <input type="text" class="form-control" id="usuarioLogin" name="usuarioLogin" maxlength="45" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                    <input type="text" class="form-control" id="usuarioLogin" name="usuarioLogin" maxlength="15" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
                                                 </div>
                                                 <span id="errorUsuarioLogin" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div>
@@ -69,7 +69,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-12" for="usuarioRegistro">Nombre de usuario</label>
                                                 <div class="col-sm-11">
-                                                    <input type="text" class="form-control" id="usuarioRegistro" name="usuarioRegistro" maxlength="45" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
+                                                    <input type="text" class="form-control" id="usuarioRegistro" name="usuarioRegistro" maxlength="15" minlength="3" placeholder="Introduzca su nombre de usuario (sólo caracteres alfanuméricos)" pattern="[a-zA-Z0-9]*" required/>
                                                 </div>
                                                 <span id="errorNombreRegistro" class="col-sm-1" style="visibility: hidden;"></span>
                                             </div>
@@ -107,7 +107,7 @@
             </div>
         </c:if>
         <!-- HEADER COMUN A TODAS LAS PÁGINAS -->
-        <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 1%; margin: 0;">
+        <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 0.9%; margin: 0;">
             <div class="col-xs-12 col-md-3">
                 <a href="${sessionScope.path}/index.jsp"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" class="img-responsive" style="margin-left: 30%; max-width: 50%;"/></a>
             </div>
@@ -137,7 +137,9 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
+                                    <c:if test="${!sessionScope.USUARIO.tipo.equals('a')}">
                                     <li><a href="${sessionScope.path}/canal.jsp">Mi canal</a></li>
+                                    </c:if>                                    
                                     <li><a href="${sessionScope.path}/configuracionCuenta.jsp">Configurar datos de cuenta</a></li>
                                     <li class="divider"></li>
                                     <li><a href="index.jsp" onclick="return false;" id="menuCerrarSesion">Cerrar sesi&oacute;n</a></li>

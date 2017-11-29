@@ -51,5 +51,6 @@ Contributor(s):
     <mapping class="es.albarregas.beans.Canal"/>
     <mapping class="es.albarregas.beans.Imagen"/>
     <mapping class="es.albarregas.beans.Suscripcion"/>
+    <mapping class="es.albarregas.beans.Categoria"/>
   </session-factory>
 </hibernate-configuration>

@@ -5,6 +5,7 @@
  */
 package es.albarregas.beans;
 
+import es.albarregas.dao.GenericoDAO;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.persistence.*;
@@ -17,36 +18,36 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements Serializable {
-    
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "idUsuario")
     private int idUsuario;
-    
+
     @Column(name = "nombre")
     private String nombre;
-    
+
     @Column(name = "email")
     private String email;
-    
+
     @Column(name = "password")
     private String password;
-    
+
     @Column(name = "tipo")
-    private char tipo;
-    
+    private String tipo;
+
     @OneToOne(cascade = CascadeType.MERGE)
     @PrimaryKeyJoinColumn
     private Canal canal;
-    
+
     @Transient
     private ArrayList<Usuario> suscripciones = new ArrayList();
-    
-    public Usuario(){
-        
+
+    public Usuario() {
+
     }
-    
-    public Usuario(int idUsuario, String nombre, String email, String password, char tipo){
+
+    public Usuario(int idUsuario, String nombre, String email, String password, String tipo) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.email = email;
@@ -113,14 +114,14 @@ public class Usuario implements Serializable {
     /**
      * @return the tipo
      */
-    public char getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
     /**
      * @param tipo the tipo to set
      */
-    public void setTipo(char tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -151,5 +152,9 @@ public class Usuario implements Serializable {
     public void setSuscripciones(ArrayList<Usuario> suscripciones) {
         this.suscripciones = suscripciones;
     }
-        
+
+    public ArrayList<Usuario> getUsuarios() {
+        return (ArrayList) new GenericoDAO().get("Usuario where tipo !='a'");
+    }
+
 }

@@ -210,11 +210,12 @@ function eventoClickLogin() {
             }
         });
     }
+    return false;
 }
 
 function eventoCambiarFotoPerfil() {
-    if (this.files[0].size > 100000) {
-        alert('El archivo no debe ser mayor de 100Kb');
+    if (this.files[0].size > 500000) {
+        alert('El archivo no debe ser mayor de 500Kb');
         this.files[0].name = '';
     } else {
         document.getElementById("btnGuardarImagen").style = "margin-left: 1%; visibility: visible;";
@@ -310,6 +311,7 @@ function eventoCerrarSesion() {
             }
         }
     });
+    return false;
 }
 
 function eventoPerdidaFocoTituloCanal() {
