@@ -120,7 +120,7 @@ public class ControlUsuario extends HttpServlet {
                 usuario = (Usuario) request.getSession(false).getAttribute("USUARIO");
                 String fileName = String.valueOf(usuario.getIdUsuario()).concat("Imagen");
                 String path = request.getSession(true).getServletContext().getRealPath("/img/");
-                path = "C:\\Users\\practica_2\\Documents\\NetBeansProjects\\conferenceOnline\\src\\main\\webapp\\img";
+                path = "C:\\Proyectos\\conferenceOnline\\src\\main\\webapp\\img";
                 String imagen = Util.subirImagen(archivo, fileName, path);
                 if (annadirImagenCanal(imagen, request)) {
                     respuesta = "ok";

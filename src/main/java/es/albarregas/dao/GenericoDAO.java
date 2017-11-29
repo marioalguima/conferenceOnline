@@ -62,7 +62,9 @@ public class GenericoDAO<T> implements IGenericoDAO<T> {
         } catch(HibernateException he){
             this.manejarExcepcion(he);
         } finally {
-            this.cerrarSesion();
+            if(sesion!=null){
+                this.cerrarSesion();
+            }
         }
         return listadoResultados;
     }
@@ -77,7 +79,9 @@ public class GenericoDAO<T> implements IGenericoDAO<T> {
         } catch(HibernateException he){
             this.manejarExcepcion(he);
         } finally {
-            this.cerrarSesion();
+            if(sesion!=null){
+                this.cerrarSesion();
+            }
         }
         
         return objetoRecuperado;
@@ -94,7 +98,9 @@ public class GenericoDAO<T> implements IGenericoDAO<T> {
             manejarExcepcion(he);
             Logger.getLogger(GenericoDAO.class.getName()).log(Level.SEVERE, null, he);
         } finally {
+            if(sesion!=null){
             cerrarSesion();
+            }
         }
     }
 
@@ -106,7 +112,9 @@ public class GenericoDAO<T> implements IGenericoDAO<T> {
         } catch(HibernateException he){
             this.manejarExcepcion(he);
         } finally {
+            if(sesion!=null){
             this.cerrarSesion();
+            }
         }
     }    
 }

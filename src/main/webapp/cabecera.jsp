@@ -150,4 +150,4 @@
                 </div>
             </div>   
         </header>
-        <div class="container-fluid" style="margin-top: 1%; margin: 0; padding: 0; height: 75%;">
+        <div class="container-fluid" style="margin-top: 1%; margin: 0; padding: 0; height: 100%;">

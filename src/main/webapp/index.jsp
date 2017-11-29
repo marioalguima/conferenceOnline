@@ -7,7 +7,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:useBean id="categorias" class="es.albarregas.beans.Categoria" scope="page"/>
-<c:set var="todasCategorias" scope="page" value="${categorias.getCategorias()}"/>
+<c:set var="todasCategorias" scope="page" value="${pageScope.categorias.getCategorias()}"/>
 <jsp:include page="cabecera.jsp"/>
 
 <c:choose>
