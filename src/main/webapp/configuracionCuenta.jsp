@@ -59,7 +59,7 @@
                         <dl>
                             <form id="formConfCanal" class="form-inline">
                                 <dt>T&iacute;tulo: </dt><dd>
-                                    <input type="text" id="TituloConfCanal" class="form-control" value="${sessionScope.USUARIO.canal.titulo}" maxlength="15" placeholder="Introduzca título del canal." disabled="true" required pattern="[a-zA-Z0-9 ]*"/>
+                                    <input type="text" id="TituloConfCanal" class="form-control" value="${sessionScope.USUARIO.canal.titulo}" maxlength="45" placeholder="Introduzca título del canal." disabled="true" required pattern="[a-zA-Z0-9 ]*"/>
                                     <span id="errorTituloConfCanal" class="glyphicon glyphicon-remove text-danger" style="visibility: hidden;"></span>
                                     <button id="btnEditarTitulo" class="btn btn-default" style="margin-left: 1%;">Editar</button>
                                 </dd><br/><br/>
