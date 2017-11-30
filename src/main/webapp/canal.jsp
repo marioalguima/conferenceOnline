@@ -10,6 +10,7 @@
 
 <c:choose>
     <c:when test="${sessionScope.USUARIO != null}">
+        <!-- PANEL IZQUIERDO -->
         <div class="col-md-2" style="margin: 0; padding: 0; height: 100%; border-right: 1px solid white;">
             <jsp:include page="panelIzquierdo.jsp"/>
         </div>
@@ -19,8 +20,10 @@
             <div style="margin: 0; padding: 0; height: 100%;">
             </c:otherwise>
         </c:choose>
+        <!-- PARTE DEL CANAL -->
         <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
             <div class="panel-heading row" style="margin: 0; padding-left: 3%; background-color: #d94442; border-radius: 0;">
+                <!-- IMAGEN DE LA CABECERA -->
                 <div class="col-md-1">
                     <div style="width: 62px; height: 62px; background-color: white; padding: 0; border: solid 1px #ffffff;">
                         <img class="img-responsive" type="image" src="
@@ -48,6 +51,7 @@
                              </c:choose>" style="height: 100%; width: auto; margin: auto;" />
                     </div>
                 </div>
+                <!-- PARTE DEL NOMBRE DEL DUEÑO DEL CANAL -->
                 <c:choose>
                     <c:when test="${requestScope.CANAL == null}">
                         <h2 class="col-md-9" style="color: #111;">Canal de ${sessionScope.USUARIO.nombre}</h2>
@@ -56,6 +60,7 @@
                         <h2 class="col-md-9" style="color: #111;">Canal de ${requestScope.CANAL.nombre}</h2>
                     </c:when>
                 </c:choose>
+                <!-- PARTE DEL BOTÓN PARA SUSCRIBIRSE O CANCELAR LA SUSCRIPCIÓN -->
                 <c:if test="${sessionScope.USUARIO != null && requestScope.CANAL != null && sessionScope.USUARIO.nombre != requestScope.CANAL.nombre}">
                     <h4 class="col-md-2 text-right" style="padding-right: 3%; margin: 0; margin-top: 2%; color: #ffffff;">
                         Suscrito:
@@ -72,6 +77,7 @@
                     </h4>    
                 </c:if>
             </div>
+            <!-- BODY DEL CANAL -->
             <div class="panel-body" style="background-color: #f2dede; height: 100%;">
                 <c:choose>
                     <c:when test="${requestScope.CANAL == null}">

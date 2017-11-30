@@ -39,30 +39,31 @@
                     <!-- PARTE DE ADMINISTRACION DE USUARIOS -->
                     <div id="usuarios" class="tab-pane fade in active" style="margin: 3%; margin-top: 0;">
                         <h3 style="margin-top: 0; padding-top: 2%;">Usuarios</h3>
-                        <table class="table table-striped" style="margin-top: 5%;">
+                        <table id="tablaUsuariosAdmin" class="table table-responsive" style="margin-top: 5%;">
                             <tr>
                                 <th>Nombre</th>
                                 <th>Email</th>
-                                <th>Bloquear</th>
+                                <th>Bloqueado</th>
                             </tr>
                         <c:forEach var="u" items="${todosUsuarios}">
-                            <tr>                                
+                            <tr>
                                 <td>${u.nombre}</td>
                                 <td>${u.email}</td>
-                                <td><input class="col-xs-1" type="checkbox" class="form-control"/></td>
+                                <td><input type="checkbox" value="${u.idUsuario}" onchange="checkBloquearUsuario(this);" data-toggle="toggle" data-on="Sí" data-off="No" data-size="mini" <c:if test="${u.tipo == 'b'}">checked="checked"</c:if> /></td>
                             </tr>
                         </c:forEach>
                         </table><br/>
-                        <button id="borrarCategorias" class="btn btn-default">Borrar</button>
+                        <button value="-1" onclick="checkBloquearUsuario(this);" class="btn btn-default">Bloquear todos</button>
+                        <button value="-2" onclick="checkBloquearUsuario(this);" class="btn btn-default">Desbloquear todos</button>
                     </div>
                     <!-- PARTE DE ADMINISTRACION DE CATEGORIAS -->
                     <div id="categorias" class="tab-pane fade in" style="margin: 3%; margin-top: 0;">
                         <h3 style="margin-top: 0; padding-top: 2%;">Categor&iacute;as</h3>
-                        <div class="col-xs-6" style="margin-top: 3%; padding-right: 3%;">
-                        <c:forEach var="c" items="${todasCategorias}">
-                            <div class="row" style="border-bottom: 1px solid #111; border-right: 1px solid #111; margin: 0; padding: 0;">                                
+                        <div id="tablaCategoriasAdmin" class="col-xs-6" style="margin-top: 3%; padding-right: 3%;">
+                        <c:forEach var="c" items="${todasCategorias}" varStatus="i">
+                            <div id="categoriaLista${i.count-1}" class="row" style="border-bottom: 1px solid #111; border-right: 1px solid #111; margin: 0; padding: 0;">                                
                                 <h4 class="col-xs-9">${c.nombre}</h4>
-                                <label class="col-xs-2" style="margin-top: 2%;">Eliminar</label><input class="col-xs-1" type="checkbox" class="form-control" style="margin-top: 2.5%;"/>
+                                <label class="col-xs-2" style="margin-top: 2%;">Eliminar</label><input class="col-xs-1" value="${c.idCategoria}" type="checkbox" class="form-control" style="margin-top: 2.5%;"/>
                             </div>
                         </c:forEach>
                             <br/><br/>

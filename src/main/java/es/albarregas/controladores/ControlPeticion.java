@@ -5,12 +5,14 @@
  */
 package es.albarregas.controladores;
 
+import es.albarregas.beans.Categoria;
 import es.albarregas.beans.Suscripcion;
 import es.albarregas.beans.Usuario;
 import es.albarregas.dao.GenericoDAO;
 import es.albarregas.utilidades.Util;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -83,6 +85,18 @@ public class ControlPeticion extends HttpServlet {
                 eliminarSuscripcion(Integer.parseInt(request.getParameter("idUsuario")), request);
                 respuesta = "ok";
                 break;
+            case "bloquearUsuario":
+                bloquearUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+                respuesta = "ok";
+                break;
+            case "desbloquearUsuario":
+                desbloquearUsuario(Integer.parseInt(request.getParameter("idUsuario")));
+                respuesta = "ok";
+                break;
+            case "borrarCategorias":
+                borrarCategorias(request.getParameter("categorias"));
+                respuesta = "ok";
+                break;
         }
         if (!respuesta.isEmpty()) {
             response.getWriter().append(respuesta);
@@ -90,27 +104,72 @@ public class ControlPeticion extends HttpServlet {
 
     }
     
-    private void suscribirse(int idUsuarioSeguir, HttpServletRequest request){        
+    private void borrarCategorias(String categorias){
+        GenericoDAO genDao = new GenericoDAO();
+        Categoria categoria;
+        StringTokenizer tokens = new StringTokenizer(categorias, ",");
+        
+        while(tokens.hasMoreTokens()){
+            categoria = (Categoria) genDao.get("Categoria where idCategoria='"+tokens.nextToken()+"'").get(0);
+            genDao.delete(categoria);
+        }
+    }
+
+    private void bloquearUsuario(int idUsuario) {
+        GenericoDAO genDao = new GenericoDAO();
+        Usuario usuario;
+        if (idUsuario != -1) {
+            usuario = (Usuario) genDao.get("Usuario where idUsuario='" + idUsuario + "'").get(0);
+            usuario.setTipo("b");
+            genDao.update(usuario);
+        } else {
+            ArrayList usuarios = (ArrayList) genDao.get("Usuario where tipo='n'");
+            for (int i = 0; i < usuarios.size(); i++) {
+                usuario = (Usuario) usuarios.get(i);
+                usuario.setTipo("b");
+                genDao.update(usuario);
+            }
+        }
+    }
+
+    private void desbloquearUsuario(int idUsuario) {
+        GenericoDAO genDao = new GenericoDAO();
+        Usuario usuario;
+        if (idUsuario != -2) {
+            usuario = (Usuario) genDao.get("Usuario where idUsuario='" + idUsuario + "'").get(0);
+            usuario.setTipo("n");
+            genDao.update(usuario);
+        } else {
+            ArrayList usuarios = (ArrayList) genDao.get("Usuario where tipo='b'");
+            for (int i = 0; i < usuarios.size(); i++) {
+                usuario = (Usuario) usuarios.get(i);
+                usuario.setTipo("n");
+                genDao.update(usuario);
+            }
+        }
+    }
+
+    private void suscribirse(int idUsuarioSeguir, HttpServletRequest request) {
         Suscripcion suscripcion;
         GenericoDAO genDao = new GenericoDAO();
         Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
         suscripcion = new Suscripcion(0, usuario.getIdUsuario(), idUsuarioSeguir);
         genDao.add(suscripcion);
-        usuario.getSuscripciones().add((Usuario)genDao.get("Usuario where idUsuario='"+idUsuarioSeguir+"'").get(0));
+        usuario.getSuscripciones().add((Usuario) genDao.get("Usuario where idUsuario='" + idUsuarioSeguir + "'").get(0));
         request.getSession().setAttribute("USUARIO", usuario);
     }
-    
-    private void eliminarSuscripcion(int idUsuarioSeguir, HttpServletRequest request){
+
+    private void eliminarSuscripcion(int idUsuarioSeguir, HttpServletRequest request) {
         Suscripcion suscripcion;
         GenericoDAO genDao = new GenericoDAO();
         Usuario usuario = (Usuario) request.getSession().getAttribute("USUARIO");
-        ArrayList<Suscripcion> suscripciones = (ArrayList) genDao.get("Suscripcion where suscriptor='"+usuario.getIdUsuario()+"' and usuarioSeguir='"+idUsuarioSeguir+"'");
-        if(suscripciones != null && !suscripciones.isEmpty()){
+        ArrayList<Suscripcion> suscripciones = (ArrayList) genDao.get("Suscripcion where suscriptor='" + usuario.getIdUsuario() + "' and usuarioSeguir='" + idUsuarioSeguir + "'");
+        if (suscripciones != null && !suscripciones.isEmpty()) {
             suscripcion = suscripciones.get(0);
             genDao.delete(suscripcion);
-            for(int i = 0; i<usuario.getSuscripciones().size(); i++){ 
-                if(usuario.getSuscripciones().get(i).getIdUsuario() == suscripcion.getUsuarioSeguir()){
-                    usuario.getSuscripciones().remove(i);                  
+            for (int i = 0; i < usuario.getSuscripciones().size(); i++) {
+                if (usuario.getSuscripciones().get(i).getIdUsuario() == suscripcion.getUsuarioSeguir()) {
+                    usuario.getSuscripciones().remove(i);
                 }
             }
         }

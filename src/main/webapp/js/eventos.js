@@ -41,7 +41,10 @@ window.onload = function () {
     }
     if (document.getElementById("btnGuardarImagen") !== null) {
         document.getElementById("btnGuardarImagen").onclick = eventoClickGuardarImagen;
-    }    
+    }
+    if (document.getElementById("borrarCategorias") !== null) {
+        document.getElementById("borrarCategorias").onclick = eventoClickBorrarCategoria;
+    }
     if (document.getElementById("cheqSuscrito") !== null) {
         document.getElementById("cheqSuscrito").onchange = eventoClickSuscribirse;
     }
@@ -107,9 +110,68 @@ window.onload = function () {
     }
 };
 
+function eventoClickBorrarCategoria() {
+    var data = "";
+    var categorias = document.getElementById("tablaCategoriasAdmin").getElementsByTagName("input");
+    var aBorrar = new Array();
+    for (var i = 0; i < categorias.length; i++) {
+        if (categorias[i].checked) {
+            aBorrar.push(categorias[i].value);
+        }
+    }
+    data = {"peticion": "borrarCategorias", "categorias": aBorrar.toString()};
+    $.ajax({
+        url: "ControlPeticion",
+        type: "POST",
+        data: data,
+        success: function (respuesta) {
+            if (respuesta === "ok") {
+                aBorrar = new Array();
+                for (var i = 0; i < categorias.length; i++) {
+                    if (categorias[i].checked) {
+                        aBorrar.push("categoriaLista" + i);
+                    }
+                }
+                for (var i = 0; i < aBorrar.length; i++) {
+                        var borrar =  document.getElementById(aBorrar[i]);
+                        var padre =  borrar.parentNode;
+                        padre.removeChild(borrar);
+                }
+            }
+        }
+    });
+}
+
+function checkBloquearUsuario(e) {
+    var data = "";
+    if (e.tagName === "INPUT") {
+        if (e.checked) {
+            data = {"peticion": "bloquearUsuario", "idUsuario": e.value};
+        } else {
+            data = {"peticion": "desbloquearUsuario", "idUsuario": e.value};
+        }
+    } else {
+        if (e.value === "-1") {
+            data = {"peticion": "bloquearUsuario", "idUsuario": e.value};
+        } else {
+            data = {"peticion": "desbloquearUsuario", "idUsuario": e.value};
+        }
+    }
+    $.ajax({
+        url: "ControlPeticion",
+        type: "POST",
+        data: data,
+        success: function (respuesta) {
+            if (respuesta === "ok") {
+                location.reload();
+            }
+        }
+    });
+}
+
 function eventoClickSuscribirse() {
     var data = "";
-    if(document.getElementById("cheqSuscrito").checked){
+    if (document.getElementById("cheqSuscrito").checked) {
         data = {"peticion": "suscribirse", "idUsuario": document.getElementById("idUsuarioSeguir").value};
     } else {
         data = {"peticion": "quitarSuscripcion", "idUsuario": document.getElementById("idUsuarioSeguir").value};
@@ -119,7 +181,7 @@ function eventoClickSuscribirse() {
         type: "POST",
         data: data,
         success: function (respuesta) {
-            if(respuesta === "ok"){
+            if (respuesta === "ok") {
                 location.reload();
             }
         }
