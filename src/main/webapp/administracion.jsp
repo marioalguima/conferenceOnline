@@ -69,7 +69,14 @@
                             <br/><br/>
                             <button id="borrarCategorias" class="btn btn-default">Borrar seleccionados</button> 
                         </div>
-                        <div class="col-xs-6" style="margin-top: 5%;">                           
+                        <div class="col-xs-6" style="margin-top: 3%; padding-left: 3%;">  
+                            <dl>
+                                <dt>Nueva categor&iacute;a:</dt><br/>
+                                <dd>
+                                    <input type="text" id="categoriaIntroducir" class="form-control" maxlength="15" placeholder="Introduzca la categoría." />
+                                </dd><br/><br/>
+                                <dd><button class="btn btn-default" id="anadirCategoria">Guardar categor&iacute;a</button></dd>
+                            </dl>
                         </div>
                     </div>
                 </div>

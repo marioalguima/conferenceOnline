@@ -8,11 +8,14 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:include page="cabecera.jsp"/>
 
+<!-- INCLUSIÓN DEL PANEL IZQUIERDO -->
 <div class="col-md-2" style="margin: 0; padding: 0; height: 110%; border-right: 1px solid white;">
     <jsp:include page="panelIzquierdo.jsp"/>
 </div>
+<!-- RESTO DEL PANEL -->
 <div class="col-sm-12 col-md-10" style="margin: 0; padding: 0; height: 110%;">
     <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
+        <!-- TÍTULO DE LA PÁGINA -->
         <div class="panel-heading" style="padding-left: 5%; background-color: #d94442; border-radius: 0;">
             <h2 style="color: #111;">Configuraci&oacute;n</h2>
         </div>
@@ -50,7 +53,7 @@
                     </form>                                    
                 </div>
             </div>
-            <!-- PARTE DE CONFIGURACIÓN DEL CANAL -->
+            <!-- PARTE DE CONFIGURACIÓN DEL CANAL SÓLO EN CASO DE USUARIO REGISTRADO -->
             <c:if test="${!sessionScope.USUARIO.tipo.equals('a')}">
                 <div class="col-sm-6" style="border-left: 1px solid black;">
                     <h3 style="padding-left: 1%; margin-bottom: 3%;">Configuraci&oacute;n de canal</h3>
@@ -71,6 +74,7 @@
                                 </dd><br/><br/>
                                 <dt></dt><dd><button id="btnGuardarCambiosCanal" class="btn btn-danger" disabled="true">Guardar cambios</button></dd><br/><br/><br/>
                             </form>
+                            <!-- PARTE DE SUBIDA DE IMAGEN DE AVATAR -->
                             <form id="formSubirImagen" class="form-inline" enctype="multipart/form-data">
                                 <dt>Avatar: </dt>
                                 <dd>

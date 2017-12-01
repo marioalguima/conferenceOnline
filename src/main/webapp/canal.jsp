@@ -10,7 +10,7 @@
 
 <c:choose>
     <c:when test="${sessionScope.USUARIO != null}">
-        <!-- PANEL IZQUIERDO -->
+        <!-- PANEL IZQUIERDO CASO DE USUARIO ANÓNIMO Y DE USUARIO REGISTRADO -->
         <div class="col-md-2" style="margin: 0; padding: 0; height: 100%; border-right: 1px solid white;">
             <jsp:include page="panelIzquierdo.jsp"/>
         </div>
@@ -60,7 +60,7 @@
                         <h2 class="col-md-9" style="color: #111;">Canal de ${requestScope.CANAL.nombre}</h2>
                     </c:when>
                 </c:choose>
-                <!-- PARTE DEL BOTÓN PARA SUSCRIBIRSE O CANCELAR LA SUSCRIPCIÓN -->
+                <!-- PARTE DEL BOTÓN PARA SUSCRIBIRSE O CANCELAR LA SUSCRIPCIÓN EN CASO DE USUARIO REGISTRADO VISITANDO CANAL AJENO -->
                 <c:if test="${sessionScope.USUARIO != null && requestScope.CANAL != null && sessionScope.USUARIO.nombre != requestScope.CANAL.nombre}">
                     <h4 class="col-md-2 text-right" style="padding-right: 3%; margin: 0; margin-top: 2%; color: #ffffff;">
                         Suscrito:

@@ -9,6 +9,13 @@ var descripcionAntiguo;
 var tituloAntiguo;
 
 window.onload = function () {
+
+if (hasGetUserMedia()) {
+  // Good to go!
+  alert("esto tira");
+} else {
+  alert('getUserMedia() is not supported in your browser');
+}
     if (document.getElementById("btnEntrar") !== null) {
         document.getElementById("btnEntrar").onclick = eventoClickEntrar;
     }
@@ -44,6 +51,9 @@ window.onload = function () {
     }
     if (document.getElementById("borrarCategorias") !== null) {
         document.getElementById("borrarCategorias").onclick = eventoClickBorrarCategoria;
+    }
+    if (document.getElementById("anadirCategoria") !== null) {
+        document.getElementById("anadirCategoria").onclick = anadirCategoria;
     }
     if (document.getElementById("cheqSuscrito") !== null) {
         document.getElementById("cheqSuscrito").onchange = eventoClickSuscribirse;
@@ -110,6 +120,28 @@ window.onload = function () {
     }
 };
 
+
+    function hasGetUserMedia() {
+  // Note: Opera builds are unprefixed.
+  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia || navigator.msGetUserMedia);
+}
+
+function anadirCategoria() {
+    if (document.getElementById("categoriaIntroducir").value.length >= 3) {
+        $.ajax({
+            url: "ControlPeticion",
+            type: "POST",
+            data: {"peticion": "anadirCategoria", "categoria": document.getElementById("categoriaIntroducir").value},
+            success: function (respuesta) {
+                if (respuesta === "ok") {
+                    alert("Categoría introducida con éxito. Refresque la página para ver los cambios.");
+                }
+            }
+        });
+    }
+}
+
 function eventoClickBorrarCategoria() {
     var data = "";
     var categorias = document.getElementById("tablaCategoriasAdmin").getElementsByTagName("input");
@@ -133,9 +165,9 @@ function eventoClickBorrarCategoria() {
                     }
                 }
                 for (var i = 0; i < aBorrar.length; i++) {
-                        var borrar =  document.getElementById(aBorrar[i]);
-                        var padre =  borrar.parentNode;
-                        padre.removeChild(borrar);
+                    var borrar = document.getElementById(aBorrar[i]);
+                    var padre = borrar.parentNode;
+                    padre.removeChild(borrar);
                 }
             }
         }

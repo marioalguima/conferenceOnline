@@ -23,7 +23,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 /**
- *
+ * Controlador para las peticiones sobre la información del usuario: login, registro, cerrar sesión y modificar los datos de la cuenta, etc
+ * 
  * @author Mario
  */
 @WebServlet(name = "ControlUsuario", urlPatterns = {"/ControlUsuario"})
@@ -41,7 +42,7 @@ public class ControlUsuario extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
 
     /**
@@ -59,7 +60,7 @@ public class ControlUsuario extends HttpServlet {
         String respuesta = "";
         HttpSession sesion = null; // Variable para almacenar la sesión
         Usuario usuario; // Variable para almacenar el usuario que se loguea o registra
-
+        // Procesa el tipo de peticion que han demandado
         switch (request.getParameter("peticion")) {
             case "comprobarNombreRegistro":
                 if (comprobarNombre(request.getParameter("nombre"))) {
@@ -120,7 +121,7 @@ public class ControlUsuario extends HttpServlet {
                 usuario = (Usuario) request.getSession(false).getAttribute("USUARIO");
                 String fileName = String.valueOf(usuario.getIdUsuario()).concat("Imagen");
                 String path = request.getSession(true).getServletContext().getRealPath("/img/");
-                path = "C:\\Proyectos\\conferenceOnline\\src\\main\\webapp\\img";
+                path = "C:\\Users\\practica_2\\Documents\\NetBeansProjects\\conferenceOnline\\src\\main\\webapp\\img";
                 String imagen = Util.subirImagen(archivo, fileName, path);
                 if (annadirImagenCanal(imagen, request)) {
                     respuesta = "ok";
@@ -217,6 +218,13 @@ public class ControlUsuario extends HttpServlet {
         return true;
     }
 
+    /**
+     * Añade una imagen de avatar al canal del usuario
+     * 
+     * @param imagen imagen a subir
+     * @param request para añadir a la sesión el usuario actualizado con la imagen
+     * @return un boolean con true si se ha podido subir la imagen
+     */
     private boolean annadirImagenCanal(String imagen, HttpServletRequest request) {
         GenericoDAO genDao = new GenericoDAO();
         Imagen aSubir;
