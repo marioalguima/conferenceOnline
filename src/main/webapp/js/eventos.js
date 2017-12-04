@@ -9,13 +9,6 @@ var descripcionAntiguo;
 var tituloAntiguo;
 
 window.onload = function () {
-
-if (hasGetUserMedia()) {
-  // Good to go!
-  alert("esto tira");
-} else {
-  alert('getUserMedia() is not supported in your browser');
-}
     if (document.getElementById("btnEntrar") !== null) {
         document.getElementById("btnEntrar").onclick = eventoClickEntrar;
     }
@@ -119,13 +112,6 @@ if (hasGetUserMedia()) {
         };
     }
 };
-
-
-    function hasGetUserMedia() {
-  // Note: Opera builds are unprefixed.
-  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia || navigator.msGetUserMedia);
-}
 
 function anadirCategoria() {
     if (document.getElementById("categoriaIntroducir").value.length >= 3) {
