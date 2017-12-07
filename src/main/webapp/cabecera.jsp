@@ -17,6 +17,11 @@
         <script src="${sessionScope.path}/js/eventos.js"></script>
         <link href="${sessionScope.path}/css/bootstrap-toggle.min.css" rel="stylesheet" type="text/css">
         <script src="${sessionScope.path}/js/bootstrap-toggle.min.js"></script>
+        <!-- SCRIPT DEL DIRECTO -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://cdn.pubnub.com/pubnub-3.7.14.min.js"></script>
+        <script src="https://cdn.pubnub.com/webrtc/webrtc.js"></script>
+        <script src="https://cdn.pubnub.com/webrtc/rtc-controller.js"></script>
     </head>
     <body class="container-fluid" style="padding-left: 0; padding-right: 0; width: 100%; height: 100%;">
 
@@ -109,12 +114,12 @@
         <!-- HEADER COMUN A TODAS LAS PÁGINAS -->
         <header class="page-header container-fluid row" style="padding-bottom: 1%; padding-top: 0.9%; margin: 0;">
             <!-- LOGOTIPO DE LA PÁGINA -->
-            <div class="col-xs-12 col-md-3">
+            <div class="col-xs-3">
                 <a href="${sessionScope.path}/index.jsp"><img src="${sessionScope.path}/img/logotipo.png" alt="Logotipo" title="Ir a Inicio" class="img-responsive" style="margin-left: 30%; max-width: 50%;"/></a>
             </div>
             <!-- BUSCADOR DE USUARIO POR NOMBRE -->
-            <div class="col-xs-12 col-md-9" style="margin-top: 2%;">
-                <div class="col-xs-12 col-md-7">
+            <div class="col-xs-9" style="margin-top: 2%;">
+                <div class="col-xs-7">
                     <form id="formBusqueda" method="post">
                         <div class="form-group" style="margin-right: 0; padding-right: 0;">
                             <input id="buscarUsuarios" type="text" class="form-control" name="nombre" placeholder="Buscar usuario" style="border-radius: 0;" autocomplete="off"/>
@@ -125,10 +130,10 @@
                     </ul>
                 </div>
                 <!-- PARTE CON LOS BOTONES DE INICIO DE SESION Y REGISTRO O DESPLEGABLE EN CASO DE USUARIO REGISTRADO -->
-                <div class="col-xs-6 col-md-5" style="padding-left: 15%;">
+                <div class="col-xs-5" style="padding-left: 15%;">
                     <c:choose>
                         <c:when test="${sessionScope.USUARIO==null}">
-                            <div class="col-xs-12 col-md-12 btn-group">
+                            <div class="col-xs-12 btn-group">
                                 <button id="btnEntrar" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Iniciar sesi&oacute;n</button>
                                 <button id="btnRegistro" class="btn btn-default" data-toggle="modal" data-target="#formRegistroLogin" style="border-radius: 0;">Registrarse</button>
                             </div>

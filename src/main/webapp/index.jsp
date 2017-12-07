@@ -13,10 +13,10 @@
 <!-- AÑADE EL PANEL IZQUIERDO EN CASO DE QUE EL USUARIO HAYA INICIADO SESIÓN -->
 <c:choose>
     <c:when test="${sessionScope.USUARIO != null}">
-        <div class="col-md-2" style="margin: 0; padding: 0; height: 100%; border-right: 1px solid white;">
+        <div class="col-xs-2" style="margin: 0; padding: 0; height: 100%; border-right: 1px solid white;">
             <jsp:include page="panelIzquierdo.jsp"/>
         </div>
-        <div class="col-sm-12 col-md-10" style="margin: 0; padding: 0; height: 100%;">
+        <div class="col-xs-10" style="margin: 0; padding: 0; height: 100%;">
         </c:when>
         <c:otherwise>
             <div style="margin: 0; padding: 0; height: 100%;">

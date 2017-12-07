@@ -9,11 +9,11 @@
 <jsp:include page="cabecera.jsp"/>
 
 <!-- INCLUSIÓN DEL PANEL IZQUIERDO -->
-<div class="col-md-2" style="margin: 0; padding: 0; height: 110%; border-right: 1px solid white;">
+<div class="col-xs-2" style="margin: 0; padding: 0; height: 110%; border-right: 1px solid white;">
     <jsp:include page="panelIzquierdo.jsp"/>
 </div>
 <!-- RESTO DEL PANEL -->
-<div class="col-sm-12 col-md-10" style="margin: 0; padding: 0; height: 110%;">
+<div class="col-xs-10" style="margin: 0; padding: 0; height: 110%;">
     <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
         <!-- TÍTULO DE LA PÁGINA -->
         <div class="panel-heading" style="padding-left: 5%; background-color: #d94442; border-radius: 0;">
@@ -21,7 +21,7 @@
         </div>
         <div class="panel-body" style="background-color: #f2dede; height: 100%; padding-top: 5%;">
             <!-- PARTE DE CONFIGURACIÓN DE LA CUENTA -->
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <h3 style="padding-left: 1%; margin-bottom: 3%;">Configuraci&oacute;n de cuenta</h3>         
                 <div style="padding-left: 2%;"><br/><br/>
                     <form id="formConfCuenta" class="form-inline">
@@ -55,7 +55,7 @@
             </div>
             <!-- PARTE DE CONFIGURACIÓN DEL CANAL SÓLO EN CASO DE USUARIO REGISTRADO -->
             <c:if test="${!sessionScope.USUARIO.tipo.equals('a')}">
-                <div class="col-sm-6" style="border-left: 1px solid black;">
+                <div class="col-xs-6" style="border-left: 1px solid black;">
                     <h3 style="padding-left: 1%; margin-bottom: 3%;">Configuraci&oacute;n de canal</h3>
                     <div class="" style="padding-left: 2%;"><br/><br/>
 

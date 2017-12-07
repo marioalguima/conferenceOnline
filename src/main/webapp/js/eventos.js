@@ -9,6 +9,9 @@ var descripcionAntiguo;
 var tituloAntiguo;
 
 window.onload = function () {
+    if(document.getElementById("canalAVer") !== null) {
+        watch(document.forms["watchForm"]);
+    }
     if (document.getElementById("btnEntrar") !== null) {
         document.getElementById("btnEntrar").onclick = eventoClickEntrar;
     }
