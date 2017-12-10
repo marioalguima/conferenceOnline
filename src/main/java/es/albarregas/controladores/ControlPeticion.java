@@ -120,12 +120,12 @@ public class ControlPeticion extends HttpServlet {
     /**
      * Añade un nuevo registro a la tabla directos con el usuario que se le pasa
      * 
-     * @param usuario Nombre del usuario cuyo directo se inicia
+     * @param usuario idUsuario del usuario cuyo directo se inicia
+     * @param idCategoria categoría del directo que se inicia
      */
     private void iniciarDirecto(String usuario, String idCategoria){
         GenericoDAO genDao = new GenericoDAO();
-        Usuario usu = (Usuario)genDao.get("Usuario where idUsuario ='"+usuario+"'").get(0);
-        Directo directo = new Directo(0,usu.getIdUsuario(), Integer.parseInt(idCategoria));
+        Directo directo = new Directo(0,Integer.parseInt(usuario), Integer.parseInt(idCategoria));
         genDao.add(directo);
     }
     
