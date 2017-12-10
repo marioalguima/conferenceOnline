@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<jsp:useBean id="categorias" class="es.albarregas.beans.Categoria" scope="page"/>
+<c:set var="todasCategorias" scope="page" value="${pageScope.categorias.getCategorias()}"/>
 <jsp:include page="cabecera.jsp"/>
 
 <c:choose>
@@ -93,8 +95,16 @@
 
                         <c:choose>
                             <c:when test="${requestScope.CANAL == null}">                                
-                                <form name="streamForm" id="stream" action="#" onsubmit="return stream(this);">
+                                <form class="form-inline" name="streamForm" id="stream" action="#" onsubmit="return stream(this);">
                                     <input type="hidden" name="streamname" id="streamname" value="${sessionScope.USUARIO.nombre}" />
+                                    <input type="hidden" name="streamIdUsuario" id="streamIdUsuario" value="${sessionScope.USUARIO.idUsuario}" /><br/><br/>
+                                    <label for="categoriaElegida">Elija una categor&iacute;a para el directo: </label><br/>
+                                    <select id="categoriaElegida" name="categoriaElegida" class="form-control">
+                                        <option value="-1" selected>Elija una categor&iacute;a</option>
+                                            <c:forEach var="c" items="${todasCategorias}">
+                                            <option value="${c.idCategoria}">${c.nombre}</option>
+                                        </c:forEach> 
+                                    </select>
                                     <div id="stream-info" style="visibility: hidden; padding-right: 10%;"><h4>Espectadores <span class="glyphicon glyphicon-user"></span> <span id="here-now">0</span></h4></div>
                                     <input id="iniciarDirecto" class="btn btn-default" type="submit" name="stream_submit" value="Iniciar directo"> 
                                 </form><br/>
@@ -131,36 +141,51 @@
                     var streamName;
 
                     function stream(form) {
-                        streamName = form.streamname.value || Math.floor(Math.random() * 100) + '';
-                        var phone = window.phone = PHONE({
-                            number: streamName, // listen on username line else random
-                            publish_key: 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
-                            subscribe_key: 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
-                            oneway: true,
-                            broadcast: true,
-                            ssl: (('https:' == document.location.protocol) ? true : false)
-                        });
-                        var ctrl = window.ctrl = CONTROLLER(phone);
-                        ctrl.ready(function () {
-                            form.streamname.style.background = "#55ff5b";
-                            form.streamname.value = phone.number();
-                            ctrl.addLocalStream(video_out);
-                            ctrl.stream();
-                            video_out.style = "background-color: black; width: 640px; height: 480px;";
-                            video_out.className = "embed-responsive-item";
-                            stream_info.style.visibility = "visible";
-                            end_stream.style.visibility = "visible";
-                            document.getElementById("iniciarDirecto").style.display = "none";
-                        });
-                        ctrl.receive(function (session) {
-                            session.ended(function (session) {
-                                console.log(session)
+                        if (document.getElementById("categoriaElegida").value !== null && document.getElementById("categoriaElegida").value !== "-1") {
+                            $.ajax({
+                                url: "ControlPeticion",
+                                type: "POST",
+                                data: {"peticion": "iniciarDirecto", "usuario": document.getElementById("streamIdUsuario").value, "categoria": document.getElementById("categoriaElegida").value},
+                                success: function (respuesta) {
+                                    if (respuesta === "ok") {
+                                        alert("Directo iniciado");
+                                    }
+                                }
                             });
-                        });
-                        ctrl.streamPresence(function (m) {
-                            here_now.innerHTML = m.occupancy;
-                        });
+                            streamName = form.streamname.value || Math.floor(Math.random() * 100) + '';
+                            var phone = window.phone = PHONE({
+                                number: streamName, // listen on username line else random
+                                publish_key: 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
+                                subscribe_key: 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
+                                oneway: true,
+                                broadcast: true,
+                                ssl: (('https:' == document.location.protocol) ? true : false)
+                            });
+                            var ctrl = window.ctrl = CONTROLLER(phone);
+                            ctrl.ready(function () {
+                                form.streamname.style.background = "#55ff5b";
+                                form.streamname.value = phone.number();
+                                ctrl.addLocalStream(video_out);
+                                ctrl.stream();
+                                video_out.style = "background-color: black; width: 640px; height: 480px;";
+                                video_out.className = "embed-responsive-item";
+                                stream_info.style.visibility = "visible";
+                                end_stream.style.visibility = "visible";
+                                document.getElementById("iniciarDirecto").style.display = "none";
+                            });
+                            ctrl.receive(function (session) {
+                                session.ended(function (session) {
+                                    console.log(session)
+                                });
+                            });
+                            ctrl.streamPresence(function (m) {
+                                here_now.innerHTML = m.occupancy;
+                            });
+                        }else{
+                            alert("Debe elegir una categoría");
+                        }
                         return false;
+
                     }
 
                     function watch(form) {
