@@ -58,9 +58,7 @@ public class ControlPeticion extends HttpServlet {
         Usuario usuario; // Variable para almacenar el usuario que pidan
         ArrayList<Usuario> usuarios; // Variable para almacenar usuarios que se necesiten
         String nombreUsuario; // Variable para almacenar el nombre del usario que pidan
-        // Procesa qué petición han demandado
-        
-                System.out.println("ESTAS AQUI0");
+        // Procesa qué petición han demandado        
         switch (request.getParameter("peticion")) {
             
             case "buscarUsuario":
@@ -109,7 +107,6 @@ public class ControlPeticion extends HttpServlet {
                 respuesta = "ok";
                 break;
             case "iniciarDirecto":                
-                System.out.println("ESTAS AQUI1");
                 iniciarDirecto(request.getParameter("usuario"), request.getParameter("categoria"));
                 respuesta = "ok";
                 break;
@@ -126,7 +123,6 @@ public class ControlPeticion extends HttpServlet {
      * @param usuario Nombre del usuario cuyo directo se inicia
      */
     private void iniciarDirecto(String usuario, String idCategoria){
-        System.out.println("ESTAS AQUI2");
         GenericoDAO genDao = new GenericoDAO();
         Usuario usu = (Usuario)genDao.get("Usuario where idUsuario ='"+usuario+"'").get(0);
         Directo directo = new Directo(0,usu.getIdUsuario(), Integer.parseInt(idCategoria));
