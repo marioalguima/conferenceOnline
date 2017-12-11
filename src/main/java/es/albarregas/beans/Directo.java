@@ -5,7 +5,9 @@
  */
 package es.albarregas.beans;
 
+import es.albarregas.dao.GenericoDAO;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -22,8 +24,10 @@ public class Directo implements Serializable{
     @Column(name = "idDirecto")
     private int idDirecto;
     
-    @Column(name = "idUsuario")
-    private int idUsuario;
+    
+    @OneToOne
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
     
     @Column(name = "idCategoria")
     private int idCategoria;
@@ -32,9 +36,9 @@ public class Directo implements Serializable{
         
     }
     
-    public Directo(int idDirecto, int idUsuario, int idCategoria){
+    public Directo(int idDirecto, Usuario usuario, int idCategoria){
         this.idDirecto = idDirecto;
-        this.idUsuario = idUsuario;
+        this.usuario = usuario;
         this.idCategoria = idCategoria;               
     }
 
@@ -53,17 +57,17 @@ public class Directo implements Serializable{
     }
 
     /**
-     * @return the idUsuario
+     * @return the usuario
      */
-    public int getIdUsuario() {
-        return idUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
     /**
-     * @param idUsuario the idUsuario to set
+     * @param usuario the idUsuario to set
      */
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     /**
@@ -78,6 +82,10 @@ public class Directo implements Serializable{
      */
     public void setIdCategoria(int idCategoria) {
         this.idCategoria = idCategoria;
+    }
+    
+    public ArrayList<Directo> getDirectosCategoria(int idCategoria){
+        return (ArrayList) new GenericoDAO().get("Directo where idCategoria='"+idCategoria+"'");
     }
     
 }

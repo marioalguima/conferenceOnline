@@ -64,6 +64,11 @@ public class Categoria implements Serializable{
         this.nombre = nombre;
     }
     
+    /**
+     * Devuelve una lista de todas las categorías
+     * 
+     * @return ArrayList con todas las categorías
+     */
     public ArrayList<Categoria> getCategorias(){
         return (ArrayList) new GenericoDAO().get("Categoria");
     }

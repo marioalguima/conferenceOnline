@@ -57,9 +57,9 @@ public class Util {
         String cadena = "{\"objeto\":[";
         for(Usuario u: usuarios){
             if(u.getCanal().getImgUsuario() != null){
-                cadena = cadena.concat("{\"nombre\": \""+u.getNombre()+"\", \"imagen\": \""+u.getCanal().getImgUsuario().getImagen()+"\"},");
+                cadena = cadena.concat("{\"nombre\": \""+u.getNombre()+"\",\"id\":\""+u.getIdUsuario()+"\", \"imagen\": \""+u.getCanal().getImgUsuario().getImagen()+"\"},");
             }else{
-                cadena = cadena.concat("{\"nombre\": \""+u.getNombre()+"\", \"imagen\": \"logotipo_min.png\"},");
+                cadena = cadena.concat("{\"nombre\": \""+u.getNombre()+"\",\"id\":\""+u.getIdUsuario()+"\", \"imagen\": \"logotipo_min.png\"},");
             }
         }        
         cadena = cadena.substring(0, cadena.length()-1);

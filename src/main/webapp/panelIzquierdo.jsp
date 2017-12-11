@@ -46,7 +46,7 @@
                             <c:forEach var="u" items="${sessionScope.USUARIO.suscripciones}">
                                 <c:if test="${u.tipo == 'n'}">
                                 <li class="row" style="background-color: #252525; padding: 2%; margin:0; margin-bottom: 2%; border: 1px solid white;">
-                                    <a href="${sessionScope.path}/ControlPeticion?peticion=canal&nombre=${u.nombre}">
+                                    <a href="${sessionScope.path}/ControlPeticion?peticion=canal&idUsuario=${u.idUsuario}">
                                         <div class="col-xs-4" style="height: 35px; width: 35px; padding: 0; background-color: white;">
                                             <img class="img-responsive" src="<c:choose>
                                                      <c:when test="${u.getCanal().getImgUsuario() == null}">

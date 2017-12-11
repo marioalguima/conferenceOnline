@@ -42,7 +42,7 @@ public class ControlUsuario extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        doPost(request, response);
     }
 
     /**
@@ -66,7 +66,7 @@ public class ControlUsuario extends HttpServlet {
                 if (comprobarNombre(request.getParameter("nombre"))) {
                     respuesta = "ok";
                 } else {
-                    respuesta = "notOk";
+                    respuesta = "notok";
                 }
                 break;
             case "comprobarEmailRegistro":

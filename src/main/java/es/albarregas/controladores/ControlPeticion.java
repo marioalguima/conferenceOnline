@@ -21,8 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Controlador para las peticiones sobre la ejecución de la web que no tengan que ver con la información del usuario: suscribirse y cancelar suscripcion, buscar usuarios,
- * bloquear y desbloquear usuarios y borrar y añadir categorias por parte del administrador, etc 
+ * Controlador para las peticiones sobre la ejecución de la web que no tengan
+ * que ver con la información del usuario: suscribirse y cancelar suscripcion,
+ * buscar usuarios, bloquear y desbloquear usuarios y borrar y añadir categorias
+ * por parte del administrador, etc
  *
  * @author Mario
  */
@@ -58,9 +60,10 @@ public class ControlPeticion extends HttpServlet {
         Usuario usuario; // Variable para almacenar el usuario que pidan
         ArrayList<Usuario> usuarios; // Variable para almacenar usuarios que se necesiten
         String nombreUsuario; // Variable para almacenar el nombre del usario que pidan
+        String idUsuario; // Variable para almacenar el idUsuario que pidan
         // Procesa qué petición han demandado        
         switch (request.getParameter("peticion")) {
-            
+
             case "buscarUsuario":
                 nombreUsuario = request.getParameter("nombre");
                 if (nombreUsuario != null) {
@@ -73,11 +76,11 @@ public class ControlPeticion extends HttpServlet {
                 }
                 break;
             case "canal":
-                nombreUsuario = request.getParameter("nombre");
-                if (nombreUsuario != null) {
-                    usuarios = buscarUsuarios(nombreUsuario, request);
-                    if (!usuarios.isEmpty()) {
-                        request.setAttribute("CANAL", usuarios.get(0));
+                idUsuario = request.getParameter("idUsuario");
+                if (idUsuario != null) {
+                    usuario = buscarUsuarioId(idUsuario, request);
+                    if (usuario != null) {
+                        request.setAttribute("CANAL", usuario);
                         request.getRequestDispatcher("canal.jsp").forward(request, response);
                     }
                 }
@@ -106,8 +109,12 @@ public class ControlPeticion extends HttpServlet {
                 anadirCategoria(request.getParameter("categoria"));
                 respuesta = "ok";
                 break;
-            case "iniciarDirecto":                
+            case "iniciarDirecto":
                 iniciarDirecto(request.getParameter("usuario"), request.getParameter("categoria"));
+                respuesta = "ok";
+                break;
+            case "finalizarDirecto":
+                finalizarDirecto(request.getParameter("usuario"));
                 respuesta = "ok";
                 break;
         }
@@ -116,49 +123,60 @@ public class ControlPeticion extends HttpServlet {
         }
 
     }
-    
+
+    private void finalizarDirecto(String idUsuario) {
+        GenericoDAO genDao = new GenericoDAO();
+        if (genDao.get("Directo where idUsuario ='" + Integer.parseInt(idUsuario) + "'").size() > 0) {
+            Directo directo = (Directo) genDao.get("Directo where idUsuario ='" + Integer.parseInt(idUsuario) + "'").get(0);
+            genDao.delete(directo);
+        }
+    }
+
     /**
      * Añade un nuevo registro a la tabla directos con el usuario que se le pasa
-     * 
+     *
      * @param usuario idUsuario del usuario cuyo directo se inicia
      * @param idCategoria categoría del directo que se inicia
      */
-    private void iniciarDirecto(String usuario, String idCategoria){
+    private void iniciarDirecto(String idUsuario, String idCategoria) {
         GenericoDAO genDao = new GenericoDAO();
-        Directo directo = new Directo(0,Integer.parseInt(usuario), Integer.parseInt(idCategoria));
+        Directo directo = new Directo(0, (Usuario) genDao.get("Usuario where idUsuario='" + idUsuario + "'").get(0), Integer.parseInt(idCategoria));
         genDao.add(directo);
     }
-    
+
     /**
      * Añade una categoría a la base de datos
-     * 
+     *
      * @param categoria String con la categoría a añadir a la base de datos
      */
-    private void anadirCategoria(String categoria){
+    private void anadirCategoria(String categoria) {
         Categoria categoriaAnadir = new Categoria(0, categoria);
         new GenericoDAO().add(categoriaAnadir);
     }
-    
+
     /**
      * Borra una o más categorías de la base de datos
-     * 
-     * @param categorias String con todas las categorías a borrar separados por ','
+     *
+     * @param categorias String con todas las categorías a borrar separados por
+     * ','
      */
-    private void borrarCategorias(String categorias){
+    private void borrarCategorias(String categorias) {
         GenericoDAO genDao = new GenericoDAO();
         Categoria categoria;
         StringTokenizer tokens = new StringTokenizer(categorias, ",");
-        
-        while(tokens.hasMoreTokens()){
-            categoria = (Categoria) genDao.get("Categoria where idCategoria='"+tokens.nextToken()+"'").get(0);
+
+        while (tokens.hasMoreTokens()) {
+            categoria = (Categoria) genDao.get("Categoria where idCategoria='" + tokens.nextToken() + "'").get(0);
             genDao.delete(categoria);
         }
     }
 
     /**
-     * Bloquea uno o todos los usuarios que no estén ya bloqueados ni sean administradores
-     * 
-     * @param idUsuario int con el idUsuario a bloquear. Si es igual a -1 bloqueará todos los usuarios
+     * Bloquea uno o todos los usuarios que no estén ya bloqueados ni sean
+     * administradores
+     *
+     * @param idUsuario int con el idUsuario a bloquear. Si es igual a -1
+     * bloqueará todos los usuarios
      */
     private void bloquearUsuario(int idUsuario) {
         GenericoDAO genDao = new GenericoDAO();
@@ -179,8 +197,9 @@ public class ControlPeticion extends HttpServlet {
 
     /**
      * Desbloquea a uno o a todos los usuarios bloqueados
-     * 
-     * @param idUsuario int con el idUsuario a desbloquear. Si es -2 desbloquea a todos los usuarios bloqueados
+     *
+     * @param idUsuario int con el idUsuario a desbloquear. Si es -2 desbloquea
+     * a todos los usuarios bloqueados
      */
     private void desbloquearUsuario(int idUsuario) {
         GenericoDAO genDao = new GenericoDAO();
@@ -200,9 +219,11 @@ public class ControlPeticion extends HttpServlet {
     }
 
     /**
-     * El usuario registrado se suscribe al usuario cuyo idUsuario se pasa como parámetro
-     * 
-     * @param idUsuarioSeguir int con el idUsuario al que se va a suscribir el usuario registrado
+     * El usuario registrado se suscribe al usuario cuyo idUsuario se pasa como
+     * parámetro
+     *
+     * @param idUsuarioSeguir int con el idUsuario al que se va a suscribir el
+     * usuario registrado
      * @param request para almacenar al usuario actualizado en la sesión
      */
     private void suscribirse(int idUsuarioSeguir, HttpServletRequest request) {
@@ -216,9 +237,11 @@ public class ControlPeticion extends HttpServlet {
     }
 
     /**
-     * Elimina la suscripción del usuario registrado del usuario cuyo idUsuario se pasa como parámetro
-     * 
-     * @param idUsuarioSeguir int con el idUsuario del que se va a desuscribir el usuario registrado
+     * Elimina la suscripción del usuario registrado del usuario cuyo idUsuario
+     * se pasa como parámetro
+     *
+     * @param idUsuarioSeguir int con el idUsuario del que se va a desuscribir
+     * el usuario registrado
      * @param request para almacenar al usuario actualizado en la sesión
      */
     private void eliminarSuscripcion(int idUsuarioSeguir, HttpServletRequest request) {
@@ -238,12 +261,28 @@ public class ControlPeticion extends HttpServlet {
         request.getSession().setAttribute("USUARIO", usuario);
     }
 
+    private Usuario buscarUsuarioId(String id, HttpServletRequest request) {
+        Usuario usuarioActivo = (Usuario) request.getSession(false).getAttribute("USUARIO");
+        String consulta = "Usuario where idUsuario = '" + id + "' and tipo = 'n'";
+        if (usuarioActivo != null) {
+            String nombreUsuario = usuarioActivo.getNombre();
+            consulta = consulta.concat(" and nombre != '" + nombreUsuario + "'");
+        }
+        GenericoDAO genDao = new GenericoDAO();
+        ArrayList<Usuario> usuarios = (ArrayList) genDao.get(consulta);
+        return usuarios.get(0);
+    }
+
     /**
-     * Busca una lista de usuarios cuyo nombre empiece con las letras introducidas
-     * 
-     * @param nombre String con las letras con las que empieza el nombre del usuario a buscar
-     * @param request para no mostrar el nombre del usuario registrado que está realizando la búsqueda
-     * @return ArrayList con la lista de usuarios cuyo inicio del nombre coincide con el introducido
+     * Busca una lista de usuarios cuyo nombre empiece con las letras
+     * introducidas
+     *
+     * @param nombre String con las letras con las que empieza el nombre del
+     * usuario a buscar
+     * @param request para no mostrar el nombre del usuario registrado que está
+     * realizando la búsqueda
+     * @return ArrayList con la lista de usuarios cuyo inicio del nombre
+     * coincide con el introducido
      */
     private ArrayList<Usuario> buscarUsuarios(String nombre, HttpServletRequest request) {
         Usuario usuarioActivo = (Usuario) request.getSession(false).getAttribute("USUARIO");

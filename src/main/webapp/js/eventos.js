@@ -227,7 +227,7 @@ function eventoCambiarBusquedaUsuario() {
                 if (respuesta !== "notok") {
                     var json = JSON.parse(respuesta);
                     for (var i in json.objeto) {
-                        document.getElementById("resultadoBusqueda").innerHTML += "<li><a href=\"ControlPeticion?peticion=canal&nombre=" + json.objeto[i].nombre + "\"><img src=\"img/" + json.objeto[i].imagen + "\" style=\"height: 25px; width: 25px; margin: 10%; margin-left: 0;\"/>" + json.objeto[i].nombre + "</a></li>";
+                        document.getElementById("resultadoBusqueda").innerHTML += "<li><a href=\"ControlPeticion?peticion=canal&idUsuario=" + json.objeto[i].id + "\"><img src=\"img/" + json.objeto[i].imagen + "\" style=\"height: 25px; width: 25px; margin: 10%; margin-left: 0;\"/>" + json.objeto[i].nombre + "</a></li>";
                     }
                     $("#resultadoBusqueda").slideDown();
                 }

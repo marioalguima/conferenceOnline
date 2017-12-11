@@ -81,7 +81,7 @@
             </div>
             <!-- BODY DEL CANAL -->
             <div class="panel-body" style="background-color: #f2dede; height: 100%; overflow-y: scroll;">
-                <div class="row">
+                <div class="row" style='padding-right: 2%;'>
                     <c:choose>
                         <c:when test="${requestScope.CANAL == null}">
                             <h3 style="margin-left: 3%; margin-top: 1%; margin-bottom: 1.5%;">${sessionScope.USUARIO.canal.titulo}</h3>
@@ -90,7 +90,7 @@
                             <h3 style="margin-left: 3%; margin-top: 1%; margin-bottom: 1.5%;">${requestScope.CANAL.canal.titulo}</h3>
                         </c:when>
                     </c:choose>
-                    <div class="col-xs-8" style="padding-left: 5%; padding-bottom: 5%;">
+                    <div class="col-xs-9" style="padding-left: 5%; padding-bottom: 5%;">
                         <div id="vid-box" style="background-color: black; width: 640px; height: 480px;"><!-- Stream goes here --></div>
 
                         <c:choose>
@@ -101,7 +101,7 @@
                                     <label for="categoriaElegida">Elija una categor&iacute;a para el directo: </label><br/>
                                     <select id="categoriaElegida" name="categoriaElegida" class="form-control">
                                         <option value="-1" selected>Elija una categor&iacute;a</option>
-                                            <c:forEach var="c" items="${todasCategorias}">
+                                        <c:forEach var="c" items="${todasCategorias}">
                                             <option value="${c.idCategoria}">${c.nombre}</option>
                                         </c:forEach> 
                                     </select>
@@ -118,7 +118,8 @@
                             </c:when>
                             <c:when test="${requestScope.CANAL != null}">
                                 <form name="watchForm" id="watch" onsubmit="return watch(this);">
-                                    <input id="canalAVer" type="hidden" name="number" value="${requestScope.CANAL.nombre}"/>                                    
+                                    <input id="canalAVer" type="hidden" name="number" value="${requestScope.CANAL.nombre}"/>   
+                                    <input id="idUsuarioVer" type="hidden" name="idUsuarioVer" value="${requestScope.CANAL.idUsuario}"/>
                                     <div id="stream-info" style="visibility: hidden; padding-right: 10%;"><h4>Espectadores <span class="glyphicon glyphicon-user"></span> <span id="here-now">0</span></h4></div>
                                 </form><br/><br/>
                                 <c:if test="${!requestScope.CANAL.canal.descripcion.isEmpty()}">
@@ -127,6 +128,49 @@
                                 </c:if>
                             </c:when>
                         </c:choose>
+
+                    </div>
+                    <div class="col-xs-3" style="background-color: white; border: 2px solid #d94442; height: 100%;">
+
+                            <div style="height: 500px; overflow-y: scroll;">
+                                <table id="chat-output"></table>
+                            </div>
+                            <!-- <HTML code for you> ::: just copy this section! -->
+                            <table class="visible">
+                                <tr>
+                                    <td style="text-align: right;width: 50%!important;">
+                                        <input type="text" id="conference-name" placeholder="Hangout Name...">
+                                    </td>
+
+                                    <td style="width: 50%!important;">
+                                        <button id="start-conferencing" href="#">Start Chat-Hangout</button>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table id="rooms-list" class="visible"></table>
+
+                            <table class="visible">
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <strong>Private chat-hangout</strong> ?? <a href="" target="_blank"
+                                                                                    title="Open this link in new tab. Then your chat-hangout room will be private!"><code><strong
+                                                    id="unique-token">#123456789</strong></code></a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div id="chat-table" class="row" style="padding: 2%; border-top: solid 1px #ccc;">
+                                <div class="col-xs-10" style="padding: 0;">
+                                    <input class="form-control" type="text" id="chat-message" style="border-radius: 4px 0 0 4px;">
+                                </div>
+                                <button id="post-chat-message" class="btn btn-default col-xs-2" style="border-radius: 0 4px 4px 0; border-left: 0;">Enviar</button>
+                            </div>
+
+                        <script src="https://cdn.webrtc-experiment.com/socket.io.js"></script>
+                        <script src="https://cdn.webrtc-experiment.com/RTCPeerConnection-v1.5.js"></script>
+                        <script src="https://cdn.webrtc-experiment.com/chat-hangout/hangout.js"></script>
+                        <script src="${sessionScope.path}/js/hangout-ui.js"></script>
 
                     </div>
                 </div>
@@ -181,7 +225,7 @@
                             ctrl.streamPresence(function (m) {
                                 here_now.innerHTML = m.occupancy;
                             });
-                        }else{
+                        } else {
                             alert("Debe elegir una categoría");
                         }
                         return false;
@@ -200,10 +244,16 @@
                         var ctrl = window.ctrl = CONTROLLER(phone);
                         ctrl.ready(function () {
                             ctrl.isStreaming(num, function (isOn) {
-                                if (isOn)
+                                if (isOn) {
                                     ctrl.joinStream(num);
-                                else
+                                } else {
+                                    $.ajax({
+                                        url: "ControlPeticion",
+                                        type: "POST",
+                                        data: {"peticion": "finalizarDirecto", "usuario": document.getElementById("idUsuarioVer").value}
+                                    });
                                     alert("El usuario no está en directo en este momento.");
+                                }
                             });
                         });
                         ctrl.receive(function (session) {
@@ -221,6 +271,16 @@
                         return false;
                     }
                     function end() {
+                        $.ajax({
+                            url: "ControlPeticion",
+                            type: "POST",
+                            data: {"peticion": "finalizarDirecto", "usuario": document.getElementById("streamIdUsuario").value},
+                            success: function (respuesta) {
+                                if (respuesta === "ok") {
+                                    alert("Directo finalizado.");
+                                }
+                            }
+                        });
                         if (!window.phone) {
                             return;
                         }
