@@ -4,6 +4,7 @@
     Author     : Mario
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<jsp:useBean id="directos" class="es.albarregas.beans.Directo" scope="page"/>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <div class="panel panel-default" style="border-radius: 0; margin: 0; padding: 0; border: 0; height: 100%;">
@@ -57,7 +58,8 @@
                                                      </c:otherwise>
                                                  </c:choose>" style="height: 100%; width: auto; margin: auto; padding: 0; border: 1px solid white;">
                                         </div>
-                                        <h4 class="col-xs-8" style="color: #ffffff; margin: 0; padding: 0; margin-top: 4%; margin-left: 5%;">${u.nombre}</h4>
+                                        <h4 class="col-xs-7" style="color: #ffffff; margin: 0; padding: 0; margin-top: 4%; margin-left: 5%;">${u.nombre}</h4>
+                                        <c:if test="${directos.usuarioOnline(u.idUsuario)}"><h5 class="col-xs-1 glyphicon glyphicon-off text-danger"></h5></c:if>
                                     </a>
                                 </li>
                             </c:if>

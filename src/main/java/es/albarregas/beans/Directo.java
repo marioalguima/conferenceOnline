@@ -84,8 +84,22 @@ public class Directo implements Serializable{
         this.idCategoria = idCategoria;
     }
     
+    /**
+     * Devuelve los directos de una categoría
+     * @param idCategoria entero con el id de la categoría de los directos
+     * @return ArrayList>Directo> con los directos de dicha categoría
+     */
     public ArrayList<Directo> getDirectosCategoria(int idCategoria){
         return (ArrayList) new GenericoDAO().get("Directo where idCategoria='"+idCategoria+"'");
+    }
+    
+    /**
+     * Devuelve true si el usuario buscado está en directo y false si no lo está
+     * @param idUsuario idUsuario del usuario a saber si está en directo
+     * @return boolean true si está en directo, false si no lo está
+     */
+    public boolean usuarioOnline(int idUsuario){        
+        return !new GenericoDAO().get("Directo where idUsuario='"+idUsuario+"'").isEmpty();
     }
     
 }
