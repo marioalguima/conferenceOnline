@@ -90,14 +90,14 @@
                             <h3 style="margin-left: 3%; margin-top: 1%; margin-bottom: 1.5%;">${requestScope.CANAL.canal.titulo}</h3>
                         </c:when>
                     </c:choose>
-                    <div class="col-xs-9" style="padding-left: 5%; padding-bottom: 5%;">
+                    <div class="col-xs-8" style="padding-left: 5%; padding-bottom: 5%;">
                         <div id="vid-box" style="background-color: black; width: 640px; height: 480px;"><!-- Stream goes here --></div>
 
                         <c:choose>
                             <c:when test="${requestScope.CANAL == null}">                                
                                 <form class="form-inline" name="streamForm" id="stream" action="#" onsubmit="return stream(this);">
                                     <input type="hidden" name="streamname" id="streamname" value="${sessionScope.USUARIO.nombre}" />
-                                    <input type="hidden" name="streamIdUsuario" id="streamIdUsuario" value="${sessionScope.USUARIO.idUsuario}" /><br/><br/>
+                                    <input type="hidden" name="streamIdUsuario" id="streamIdUsuario" value="${sessionScope.USUARIO.idUsuario}" /><br/>
                                     <label for="categoriaElegida">Elija una categor&iacute;a para el directo: </label><br/>
                                     <select id="categoriaElegida" name="categoriaElegida" class="form-control">
                                         <option value="-1" selected>Elija una categor&iacute;a</option>
@@ -110,10 +110,14 @@
                                 </form><br/>
                                 <div id="inStream">
                                     <button class="btn btn-default" id="end" onclick="end()" style="visibility: hidden;">Finalizar directo</button> <br>
-                                </div><br/>                                
+                                </div><br/>                     
                                 <c:if test="${!sessionScope.USUARIO.canal.descripcion.isEmpty()}">
-                                    <h4>Descripci&oacute;n del canal:</h4>
-                                    <p>${sessionScope.USUARIO.canal.descripcion}</p>
+                                    <div class="panel panel-default" style="width: 640px; border-radius: 0;">                                        
+                                        <div class="panel-body">
+                                            <h4>Descripci&oacute;n del canal:</h4>
+                                            <p>${sessionScope.USUARIO.canal.descripcion}</p>
+                                        </div>
+                                    </div>
                                 </c:if>
                             </c:when>
                             <c:when test="${requestScope.CANAL != null}">
@@ -121,174 +125,43 @@
                                     <input id="canalAVer" type="hidden" name="number" value="${requestScope.CANAL.nombre}"/>   
                                     <input id="idUsuarioVer" type="hidden" name="idUsuarioVer" value="${requestScope.CANAL.idUsuario}"/>
                                     <div id="stream-info" style="visibility: hidden; padding-right: 10%;"><h4>Espectadores <span class="glyphicon glyphicon-user"></span> <span id="here-now">0</span></h4></div>
-                                </form><br/><br/>
+                                </form><br/>
                                 <c:if test="${!requestScope.CANAL.canal.descripcion.isEmpty()}">
-                                    <h4>Descripci&oacute;n del canal:</h4>
-                                    <p>${requestScope.CANAL.canal.descripcion}</p>
+                                    <div class="panel panel-default" style="width: 640px; border-radius: 0;">                                        
+                                        <div class="panel-body">
+                                            <h4>Descripci&oacute;n del canal:</h4>                                        
+                                            <p>${requestScope.CANAL.canal.descripcion}</p>
+                                        </div>
+                                    </div>
                                 </c:if>
                             </c:when>
                         </c:choose>
-
                     </div>
-                    <div class="col-xs-3" style="background-color: white; border: 2px solid #d94442; height: 100%;">
+                    <!-- PARTE DEL CHAT -->
+                    <div class="col-xs-4" style="background-color: white; border: 2px solid #d94442; height: 100%; padding-top: 1%;">
 
-                            <div style="height: 500px; overflow-y: scroll;">
-                                <table id="chat-output"></table>
+                        <div id="chatHistory" style="height: 500px; overflow-y: scroll;">
+                        </div>
+
+                        <div class="row" style="padding: 2%; border-top: solid 1px #ccc;">
+                            <div class="col-xs-10" style="padding: 0;">
+                                <input class="form-control" type="text" id="message" placeholder="Enviar un mensaje" <c:if test="${sessionScope.USUARIO.tipo != 'n'}">disabled</c:if> style="border-radius: 4px 0 0 4px;">
+                                <input type="hidden" id="nombreUsuario" value="${sessionScope.USUARIO.nombre}"/>
+                                <c:choose>
+                                    <c:when test="${requestScope.CANAL == null}">
+                                        <input type="hidden" id="canal" value="${sessionScope.USUARIO.nombre}"/>
+                                    </c:when>
+                                    <c:when test="${requestScope.CANAL != null}">
+                                        <input type="hidden" id="canal" value="${requestScope.CANAL.nombre}"/>
+                                    </c:when>
+                                </c:choose>
                             </div>
-                            <!-- <HTML code for you> ::: just copy this section! -->
-                            <table class="visible">
-                                <tr>
-                                    <td style="text-align: right;width: 50%!important;">
-                                        <input type="text" id="conference-name" placeholder="Hangout Name...">
-                                    </td>
-
-                                    <td style="width: 50%!important;">
-                                        <button id="start-conferencing" href="#">Start Chat-Hangout</button>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <table id="rooms-list" class="visible"></table>
-
-                            <table class="visible">
-                                <tr>
-                                    <td style="text-align: center;">
-                                        <strong>Private chat-hangout</strong> ?? <a href="" target="_blank"
-                                                                                    title="Open this link in new tab. Then your chat-hangout room will be private!"><code><strong
-                                                    id="unique-token">#123456789</strong></code></a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <div id="chat-table" class="row" style="padding: 2%; border-top: solid 1px #ccc;">
-                                <div class="col-xs-10" style="padding: 0;">
-                                    <input class="form-control" type="text" id="chat-message" style="border-radius: 4px 0 0 4px;">
-                                </div>
-                                <button id="post-chat-message" class="btn btn-default col-xs-2" style="border-radius: 0 4px 4px 0; border-left: 0;">Enviar</button>
+                            <button id="sendButton" class="btn btn-default col-xs-2" <c:if test="${sessionScope.USUARIO.tipo != 'n'}">disabled</c:if> style="border-radius: 0 4px 4px 0; border-left: 0;">Enviar</button>
                             </div>
-
-                        <script src="https://cdn.webrtc-experiment.com/socket.io.js"></script>
-                        <script src="https://cdn.webrtc-experiment.com/RTCPeerConnection-v1.5.js"></script>
-                        <script src="https://cdn.webrtc-experiment.com/chat-hangout/hangout.js"></script>
-                        <script src="${sessionScope.path}/js/hangout-ui.js"></script>
-
+                        </div>
                     </div>
-                </div>
-                <script type="text/javascript">
-
-                    var video_out = document.getElementById("vid-box");
-                    var embed_code = document.getElementById("embed-code");
-                    var here_now = document.getElementById('here-now');
-                    var stream_info = document.getElementById('stream-info');
-                    var end_stream = document.getElementById('end');
-
-                    var streamName;
-
-                    function stream(form) {
-                        if (document.getElementById("categoriaElegida").value !== null && document.getElementById("categoriaElegida").value !== "-1") {
-                            $.ajax({
-                                url: "ControlPeticion",
-                                type: "POST",
-                                data: {"peticion": "iniciarDirecto", "usuario": document.getElementById("streamIdUsuario").value, "categoria": document.getElementById("categoriaElegida").value},
-                                success: function (respuesta) {
-                                    if (respuesta === "ok") {
-                                        alert("Directo iniciado");
-                                    }
-                                }
-                            });
-                            streamName = form.streamname.value || Math.floor(Math.random() * 100) + '';
-                            var phone = window.phone = PHONE({
-                                number: streamName, // listen on username line else random
-                                publish_key: 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
-                                subscribe_key: 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
-                                oneway: true,
-                                broadcast: true,
-                                ssl: (('https:' == document.location.protocol) ? true : false)
-                            });
-                            var ctrl = window.ctrl = CONTROLLER(phone);
-                            ctrl.ready(function () {
-                                form.streamname.style.background = "#55ff5b";
-                                form.streamname.value = phone.number();
-                                ctrl.addLocalStream(video_out);
-                                ctrl.stream();
-                                video_out.style = "background-color: black; width: 640px; height: 480px;";
-                                video_out.className = "embed-responsive-item";
-                                stream_info.style.visibility = "visible";
-                                end_stream.style.visibility = "visible";
-                                document.getElementById("iniciarDirecto").style.display = "none";
-                            });
-                            ctrl.receive(function (session) {
-                                session.ended(function (session) {
-                                    console.log(session)
-                                });
-                            });
-                            ctrl.streamPresence(function (m) {
-                                here_now.innerHTML = m.occupancy;
-                            });
-                        } else {
-                            alert("Debe elegir una categoría");
-                        }
-                        return false;
-
-                    }
-
-                    function watch(form) {
-                        var num = form.number.value;
-                        var phone = window.phone = PHONE({
-                            number: "Viewer" + Math.floor(Math.random() * 100), // listen on username line else random
-                            publish_key: 'pub-c-561a7378-fa06-4c50-a331-5c0056d0163c', // Your Pub Key
-                            subscribe_key: 'sub-c-17b7db8a-3915-11e4-9868-02ee2ddab7fe', // Your Sub Key
-                            oneway: true,
-                            ssl: (('https:' == document.location.protocol) ? true : false)
-                        });
-                        var ctrl = window.ctrl = CONTROLLER(phone);
-                        ctrl.ready(function () {
-                            ctrl.isStreaming(num, function (isOn) {
-                                if (isOn) {
-                                    ctrl.joinStream(num);
-                                } else {
-                                    $.ajax({
-                                        url: "ControlPeticion",
-                                        type: "POST",
-                                        data: {"peticion": "finalizarDirecto", "usuario": document.getElementById("idUsuarioVer").value}
-                                    });
-                                    alert("El usuario no está en directo en este momento.");
-                                }
-                            });
-                        });
-                        ctrl.receive(function (session) {
-                            session.connected(function (session) {
-                                video_out.appendChild(session.video);
-                                video_out.style = "background-color: black; width: 640px; height: 480px;";
-                                video_out.className = "embed-responsive-item";
-                                video_out.lastChild.setAttribute("controls", "true");
-                                stream_info.style.visibility = "visible";
-                            });
-                        });
-                        ctrl.streamPresence(function (m) {
-                            here_now.innerHTML = m.occupancy;
-                        });
-                        return false;
-                    }
-                    function end() {
-                        $.ajax({
-                            url: "ControlPeticion",
-                            type: "POST",
-                            data: {"peticion": "finalizarDirecto", "usuario": document.getElementById("streamIdUsuario").value},
-                            success: function (respuesta) {
-                                if (respuesta === "ok") {
-                                    alert("Directo finalizado.");
-                                }
-                            }
-                        });
-                        if (!window.phone) {
-                            return;
-                        }
-                        ctrl.hangup();
-                        video_out.innerHTML = "";
-                        location.reload();
-                    }
-                </script>
+                <script type="text/javascript" src="${sessionScope.path}/js/chat.js"></script>
+                <script type="text/javascript" src="${sessionScope.path}/js/directo.js"></script>
             </div>
         </div>
     </div>
