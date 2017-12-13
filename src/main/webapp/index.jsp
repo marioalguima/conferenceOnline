@@ -45,25 +45,27 @@
                                 <h4>No hay directos de esta categor&iacute;a en este momento.</h4>
                             </c:if>
                             <c:forEach var="d" items="${pageScope.directos.getDirectosCategoria(c.idCategoria)}">
-                                <div class="row col-xs-3" style="margin-bottom: 1%;">
-                                    <div class="col-xs-4"></div>
-                                    <div class="col-xs-4">
-                                        <a href="${sessionScope.path}/ControlPeticion?peticion=canal&idUsuario=${d.usuario.idUsuario}">
-                                            <div style="height: 100px; width: 100px; padding: 1%; background-color: white; margin: auto; border: 2px solid #d94442;">
-                                                <img class="img-responsive" src="<c:choose>
-                                                         <c:when test="${d.usuario.getCanal().getImgUsuario() == null}">
-                                                             ${sessionScope.path}/img/logotipo_min.png
-                                                         </c:when>
-                                                         <c:otherwise>
-                                                             ${sessionScope.path}/img/${d.usuario.getCanal().getImgUsuario().getImagen()}
-                                                         </c:otherwise>
-                                                     </c:choose>" style="height: 100%; width: auto; margin: auto; padding: 0; border: 1px solid white;">
-                                            </div>
-                                            <h4 class="text-center">${d.usuario.nombre}</h4>
-                                        </a>
+                                <c:if test="${d.usuario.idUsuario != sessionScope.USUARIO.idUsuario}">
+                                    <div class="row col-xs-3" style="margin-bottom: 1%;">
+                                        <div class="col-xs-4"></div>
+                                        <div class="col-xs-4">
+                                            <a href="${sessionScope.path}/ControlPeticion?peticion=canal&idUsuario=${d.usuario.idUsuario}">
+                                                <div style="height: 100px; width: 100px; padding: 1%; background-color: white; margin: auto; border: 2px solid #d94442;">
+                                                    <img class="img-responsive" src="<c:choose>
+                                                             <c:when test="${d.usuario.getCanal().getImgUsuario() == null}">
+                                                                 ${sessionScope.path}/img/logotipo_min.png
+                                                             </c:when>
+                                                             <c:otherwise>
+                                                                 ${sessionScope.path}/img/${d.usuario.getCanal().getImgUsuario().getImagen()}
+                                                             </c:otherwise>
+                                                         </c:choose>" style="height: 100%; width: auto; margin: auto; padding: 0; border: 1px solid white;">
+                                                </div>
+                                                <h4 class="text-center">${d.usuario.nombre}</h4>
+                                            </a>
+                                        </div>
+                                        <div class="col-xs-4"></div>
                                     </div>
-                                    <div class="col-xs-4"></div>
-                                </div>
+                                </c:if>
                             </c:forEach>
                         </div>
                     </c:forEach>
