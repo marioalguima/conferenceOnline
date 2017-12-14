@@ -87,7 +87,7 @@ public class Directo implements Serializable{
     /**
      * Devuelve los directos de una categoría
      * @param idCategoria entero con el id de la categoría de los directos
-     * @return ArrayList>Directo> con los directos de dicha categoría
+     * @return ArrayList con los directos de dicha categoría
      */
     public ArrayList<Directo> getDirectosCategoria(int idCategoria){
         return (ArrayList) new GenericoDAO().get("Directo where idCategoria='"+idCategoria+"'");
